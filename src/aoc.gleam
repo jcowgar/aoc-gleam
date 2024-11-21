@@ -112,3 +112,11 @@ pub fn run(problem: Problem(a), f) {
 pub fn expect(problem: Problem(a), value: a) -> Problem(a) {
   Problem(..problem, expect: Some(value))
 }
+
+pub fn input_filepath(year: String, day: String) -> String {
+  "data/year_" <> year <> "/day_" <> day
+}
+
+pub fn input_filename(year: String, day: String) -> String {
+  input_filepath(year, day) <> "/input.txt"
+}
