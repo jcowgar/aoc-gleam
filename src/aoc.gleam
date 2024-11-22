@@ -42,7 +42,7 @@ pub fn report(problem: Problem(a)) {
 
   case problem.expect {
     None -> {
-      io.println("🤷unchecked result:")
+      io.println("❓unchecked result:")
       io.print("    ")
       io.debug(problem.answer)
 
@@ -50,13 +50,13 @@ pub fn report(problem: Problem(a)) {
     }
 
     Some(_) if problem.expect == problem.answer -> {
-      io.println("🥳pass")
+      io.println("✅pass")
 
       Nil
     }
 
     Some(_) -> {
-      io.println("💥fail")
+      io.println("❌fail")
       io.println("  expected:")
       io.print("    ")
       io.debug(problem.expect)
