@@ -27,7 +27,6 @@ pub fn report(problem: Problem(a)) {
     Actual -> "act"
   }
 
-  io.println("")
   io.print(
     "year "
     <> int.to_string(problem.year)
