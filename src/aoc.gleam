@@ -75,21 +75,17 @@ pub fn problem(
   day: Int,
   part: Int,
 ) -> Problem(a) {
-  let type_val = case problem_type {
-    Test -> "_test_" <> int.to_string(part)
-    Actual -> ""
-  }
-
   let assert Ok(content) =
-    simplifile.read(
-      "data/"
-      <> int.to_string(year)
-      <> "/day_"
-      <> int.to_string(day)
-      <> "/input"
-      <> type_val
-      <> ".txt",
-    )
+    case problem_type {
+      Test ->
+        input_test_filename(
+          int.to_string(year),
+          int.to_string(day),
+          int.to_string(part),
+        )
+      Actual -> input_filename(int.to_string(year), int.to_string(day))
+    }
+    |> simplifile.read()
 
   Problem(
     problem_type:,
@@ -119,4 +115,8 @@ pub fn input_filepath(year: String, day: String) -> String {
 
 pub fn input_filename(year: String, day: String) -> String {
   input_filepath(year, day) <> "/input.txt"
+}
+
+pub fn input_test_filename(year: String, day: String, part: String) -> String {
+  input_filepath(year, day) <> "/input_test_" <> part <> ".txt"
 }
