@@ -1,18 +1,6 @@
 import aoc
 import gleam/int
 import gleam/list
-import gleam/string
-
-fn parse_content(content: String) -> List(Int) {
-  case
-    content
-    |> string.split("\n")
-    |> list.try_map(int.parse)
-  {
-    Ok(values) -> values
-    Error(_) -> panic
-  }
-}
 
 fn count_increases(last: Int, remaining: List(Int), acc: Int) -> Int {
   case remaining {
@@ -30,14 +18,14 @@ fn list_sum(l: List(Int), acc: Int) -> Int {
 }
 
 fn part1(problem: aoc.Problem(Int)) -> Int {
-  let assert [head, ..rest] = parse_content(problem.input)
+  let assert [head, ..rest] = aoc.input_line_mapper(problem, int.parse)
 
   count_increases(head, rest, 0)
 }
 
 fn part2(problem: aoc.Problem(Int)) -> Int {
   let assert [head, ..rest] =
-    parse_content(problem.input)
+    aoc.input_line_mapper(problem, int.parse)
     |> list.window(3)
     |> list.map(fn(window) { list_sum(window, 0) })
 
