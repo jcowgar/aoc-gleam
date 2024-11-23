@@ -1,5 +1,6 @@
 import gleam/int
 import gleam/io
+import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/string
 import simplifile
@@ -118,4 +119,26 @@ pub fn input_filename(year: String, day: String) -> String {
 
 pub fn input_test_filename(year: String, day: String, part: String) -> String {
   input_filepath(year, day) <> "/input_test_" <> part <> ".txt"
+}
+
+pub fn solution_filepath(year: String, day: String) -> String {
+  "src/year_" <> year <> "/day_" <> day
+}
+
+pub fn solution_filename(year: String, day: String) -> String {
+  solution_filepath(year, day) <> "/solution.gleam"
+}
+
+pub fn input_line_mapper(
+  problem: Problem(a),
+  f: fn(String) -> Result(b, c),
+) -> List(b) {
+  case problem.input |> string.split("\n") |> list.try_map(f) {
+    Ok(values) -> values
+    Error(e) -> {
+      io.println_error(string.inspect(e))
+
+      panic
+    }
+  }
 }
