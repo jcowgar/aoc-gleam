@@ -9,39 +9,26 @@ import simplifile
 
 const gleam_source = "
 import aoc
+import gleam/int
 import gleam/string
 
 type Result = Int
 type MyProblem = aoc.Problem(Result)
 
-fn parse_input(content: String) {
-  case
-    content
-    |> string.split(\"\\n\")
-  {
-    Ok(values) -> values
-    Error(e) -> {
-      io.println_error(string.inspect(e))
-
-      panic
-    }
-  }
-}
-
 fn part1(problem: MyProblem) -> Result {
-  let input = aoc.input_line_map(problem, int.to_string)
+  let input = aoc.input_line_mapper(problem, int.parse)
 
   0
 }
 
 fn part2(problem: MyProblem) -> Result {
-  let input = aoc.input_line_map(problem, int.to_string)
+  let input = aoc.input_line_mapper(problem, int.parse)
 
   0
 }
 
 pub fn main() {
-  aoc.problem(aoc.Test, {{year}}, {{day}}, 1) |> aoc.expect(0) |> aoc.run(part1)
+  //aoc.problem(aoc.Test, {{year}}, {{day}}, 1) |> aoc.expect(0) |> aoc.run(part1)
   aoc.problem(aoc.Actual, {{year}}, {{day}}, 1) |> aoc.expect(0) |> aoc.run(part1)
   aoc.problem(aoc.Actual, {{year}}, {{day}}, 2) |> aoc.expect(0) |> aoc.run(part2)
 }
