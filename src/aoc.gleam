@@ -1,8 +1,10 @@
+import birl
 import gleam/int
 import gleam/io
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/string
+import humanise/time
 import simplifile
 
 pub type ProblemType {
@@ -22,7 +24,9 @@ pub type Problem(a) {
   )
 }
 
-pub fn report(problem: Problem(a)) {
+pub fn report(problem: Problem(a), elapsed) {
+  let elapsed_as_string =
+    time.humanise(time.Microseconds(int.to_float(elapsed))) |> time.to_string()
   let problem_type = case problem.problem_type {
     Test -> "tst"
     Actual -> "act"
@@ -42,7 +46,7 @@ pub fn report(problem: Problem(a)) {
 
   case problem.expect {
     None -> {
-      io.println("❓unchecked result:")
+      io.println("❓unchecked (" <> elapsed_as_string <> ")")
       io.print("    ")
       io.debug(problem.answer)
 
@@ -50,19 +54,18 @@ pub fn report(problem: Problem(a)) {
     }
 
     Some(_) if problem.expect == problem.answer -> {
-      io.println("✅pass")
+      io.println("✅pass (" <> elapsed_as_string <> ")")
 
       Nil
     }
 
     Some(_) -> {
-      io.println("❌fail")
+      io.println("❌fail (" <> elapsed_as_string <> ")")
       io.println("  expected:")
       io.print("    ")
       io.debug(problem.expect)
       io.println("  does not match problem:")
-      io.print("    ")
-      io.debug(problem.answer)
+      io.println("    " <> string.inspect(problem.answer))
 
       Nil
     }
@@ -99,10 +102,12 @@ pub fn problem(
 }
 
 pub fn run(problem: Problem(a), f) {
+  let start_time = birl.monotonic_now()
   let answer = f(problem)
+  let end_time = birl.monotonic_now()
 
   Problem(..problem, answer: Some(answer))
-  |> report()
+  |> report(end_time - start_time)
 }
 
 pub fn expect(problem: Problem(a), value: a) -> Problem(a) {
