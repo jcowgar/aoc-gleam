@@ -48,30 +48,26 @@ pub fn report(problem: Problem(a), elapsed) {
     None -> {
       io.println("❓unchecked (" <> elapsed_as_string <> ")")
       io.print("    ")
-      io.debug(problem.answer)
-
-      Nil
+      io.println(string.inspect(problem.answer))
     }
 
     Some(_) if problem.expect == problem.answer -> {
       io.println("✅pass (" <> elapsed_as_string <> ")")
-
-      Nil
     }
 
     Some(_) -> {
       io.println("❌fail (" <> elapsed_as_string <> ")")
       io.println("  expected:")
       io.print("    ")
-      io.debug(problem.expect)
+      io.println(string.inspect(problem.expect))
       io.println("  does not match problem:")
       io.println("    " <> string.inspect(problem.answer))
-
-      Nil
     }
   }
 }
 
+/// Create a new problem statement.
+///
 pub fn problem(
   problem_type: ProblemType,
   year: Int,
@@ -134,6 +130,8 @@ pub fn solution_filename(year: String, day: String) -> String {
   solution_filepath(year, day) <> "/solution.gleam"
 }
 
+/// Parse the input content line-by-line according to `f`.
+///
 pub fn input_line_mapper(
   problem: Problem(a),
   f: fn(String) -> Result(b, c),
