@@ -63,7 +63,7 @@ fn part1(problem: aoc.Problem(Int)) -> Int {
 }
 
 fn part2(problem: aoc.Problem(Int)) -> Int {
-    -1
+  -1
 }
 
 pub fn main() {
