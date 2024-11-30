@@ -34,3 +34,39 @@ AOC_SESSION=abc123
 ```
 
 The `AOC_SESSION` value can be found in your browser cookies.
+
+## Example Solution
+
+This is an example solution to 2021 day 1 part 1 may look like using the template created and this `aoc` package.
+
+```gleam
+import aoc
+import gleam/int
+import gleam/io
+
+fn count_increases(last: Int, remaining: List(Int), acc: Int) -> Int {
+  case remaining {
+    [head, ..rest] if last < head -> count_increases(head, rest, acc + 1)
+    [head, ..rest] -> count_increases(head, rest, acc)
+    [] -> acc
+  }
+}
+
+fn part1(problem: aoc.Problem(Int)) -> Int {
+  let assert [head, ..rest] = aoc.input_line_mapper(problem, int.parse)
+
+  count_increases(head, rest, 0)
+}
+
+fn part2(problem: aoc.Problem(Int)) -> Int {
+    -1
+}
+
+pub fn main() {
+  io.println("")
+
+  aoc.problem(aoc.Test, 2021, 1, 1) |> aoc.expect(7) |> aoc.run(part1)
+  aoc.problem(aoc.Actual, 2021, 1, 1) |> aoc.expect(100) |> aoc.run(part1)
+  aoc.problem(aoc.Actual, 2021, 1, 2) |> aoc.run(part2)
+}
+```
