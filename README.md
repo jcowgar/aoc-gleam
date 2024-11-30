@@ -21,7 +21,7 @@ year 2021 day 1 part 2 act = ✅pass (536.0us)
 
 Ultimately, when you get the right answer for all steps everything will be green!
 
-## Notes
+## Dependencies
 
 [Just](https://just.systems) is used as a command runner. [entr](https://github.com/eradman/entr) is used to watch the filesystem and re-run your code when changed.
 
@@ -34,6 +34,10 @@ AOC_SESSION=abc123
 ```
 
 The `AOC_SESSION` value can be found in your browser cookies.
+
+### Test Scenarios
+
+You can specify a Test scenario. This is the short input for a part and the answer given to the puzzle. If you choose to do the test scenarios, you must create the input for that test manually. Place it in `data/year_YEAR/day_DAY/input_test_PART.txt` for it to be read correctly.
 
 ## Example Solution
 
