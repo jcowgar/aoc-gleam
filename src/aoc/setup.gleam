@@ -8,27 +8,25 @@ import gleam/string
 import simplifile
 
 const gleam_source = "
-import aoc
+import aoc.{type Problem}
 import gleam/int
-import gleam/string
 
-type Result = Int
-type MyProblem = aoc.Problem(Result)
+type Answer = Int
 
-fn part1(problem: MyProblem) -> Result {
+fn part1(problem: Problem(Answer)) -> Answer {
   let input = aoc.input_line_mapper(problem, int.parse)
 
   0
 }
 
-fn part2(problem: MyProblem) -> Result {
+fn part2(problem: Problem(Answer)) -> Answer {
   let input = aoc.input_line_mapper(problem, int.parse)
 
   0
 }
 
 pub fn main() {
-  //aoc.problem(aoc.Test, {{year}}, {{day}}, 1) |> aoc.expect(0) |> aoc.run(part1)
+  aoc.problem(aoc.Test, {{year}}, {{day}}, 1) |> aoc.expect(0) |> aoc.run(part1)
   aoc.problem(aoc.Actual, {{year}}, {{day}}, 1) |> aoc.expect(0) |> aoc.run(part1)
   aoc.problem(aoc.Actual, {{year}}, {{day}}, 2) |> aoc.expect(0) |> aoc.run(part2)
 }

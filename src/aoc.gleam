@@ -33,37 +33,50 @@ pub fn report(problem: Problem(a), elapsed) {
   }
 
   io.print(
-    "year "
-    <> int.to_string(problem.year)
-    <> " day "
-    <> int.to_string(problem.day)
-    <> " part "
-    <> int.to_string(problem.part)
-    <> " "
-    <> problem_type
-    <> " = ",
+    "  part " <> int.to_string(problem.part) <> " " <> problem_type <> " = ",
   )
 
-  case problem.expect {
-    None -> {
-      io.println("❓unchecked (" <> elapsed_as_string <> ")")
-      io.print("    ")
-      io.println(string.inspect(problem.answer))
+  case problem.input {
+    "" -> {
+      io.println(
+        "🙈 no input content, does file exist? (" <> elapsed_as_string <> ")",
+      )
     }
 
-    Some(_) if problem.expect == problem.answer -> {
-      io.println("✅pass (" <> elapsed_as_string <> ")")
-    }
+    _ ->
+      case problem.expect {
+        None -> {
+          io.println("❓unchecked (" <> elapsed_as_string <> ")")
+          io.print("      ")
+          io.println(string.inspect(problem.answer))
+        }
 
-    Some(_) -> {
-      io.println("❌fail (" <> elapsed_as_string <> ")")
-      io.println("  expected:")
-      io.print("    ")
-      io.println(string.inspect(problem.expect))
-      io.println("  does not match problem:")
-      io.println("    " <> string.inspect(problem.answer))
-    }
+        Some(_) if problem.expect == problem.answer -> {
+          io.println("✅ pass (" <> elapsed_as_string <> ")")
+        }
+
+        Some(_) -> {
+          io.println("❌ fail (" <> elapsed_as_string <> ")")
+          io.println("    expected:")
+          io.print("      ")
+          io.println(string.inspect(problem.expect))
+          io.println("    but got:")
+          io.println("      " <> string.inspect(problem.answer))
+        }
+      }
   }
+}
+
+/// Display a year/day header
+///
+pub fn header(year: Int, day: Int) {
+  io.println("")
+  io.println(
+    "Advent of Code: year "
+    <> int.to_string(year)
+    <> " day "
+    <> int.to_string(day),
+  )
 }
 
 /// Create a new problem statement.
@@ -74,7 +87,7 @@ pub fn problem(
   day: Int,
   part: Int,
 ) -> Problem(a) {
-  let assert Ok(content) =
+  let file_content =
     case problem_type {
       Test ->
         input_test_filename(
@@ -85,6 +98,11 @@ pub fn problem(
       Actual -> input_filename(int.to_string(year), int.to_string(day))
     }
     |> simplifile.read()
+
+  let content = case file_content {
+    Ok(content) -> content
+    Error(_) -> ""
+  }
 
   Problem(
     problem_type:,
@@ -98,12 +116,19 @@ pub fn problem(
 }
 
 pub fn run(problem: Problem(a), f) {
-  let start_time = birl.monotonic_now()
-  let answer = f(problem)
-  let end_time = birl.monotonic_now()
+  let #(elapse_time, answer) = case problem.input {
+    "" -> #(0, None)
+    _content -> {
+      let start_time = birl.monotonic_now()
+      let answer = f(problem)
+      let end_time = birl.monotonic_now()
 
-  Problem(..problem, answer: Some(answer))
-  |> report(end_time - start_time)
+      #(end_time - start_time, Some(answer))
+    }
+  }
+
+  Problem(..problem, answer: answer)
+  |> report(elapse_time)
 }
 
 pub fn expect(problem: Problem(a), value: a) -> Problem(a) {
@@ -137,6 +162,22 @@ pub fn input_line_mapper(
   f: fn(String) -> Result(b, c),
 ) -> List(b) {
   case problem.input |> string.split("\n") |> list.try_map(f) {
+    Ok(values) -> values
+    Error(e) -> {
+      io.println_error(string.inspect(e))
+
+      panic
+    }
+  }
+}
+
+/// Parse the input content on a character basis according to `f`.
+///
+pub fn input_grapheme_mapper(
+  problem: Problem(a),
+  f: fn(String) -> Result(b, c),
+) -> List(b) {
+  case problem.input |> string.to_graphemes() |> list.try_map(f) {
     Ok(values) -> values
     Error(e) -> {
       io.println_error(string.inspect(e))
