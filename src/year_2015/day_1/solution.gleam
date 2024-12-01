@@ -13,17 +13,19 @@ fn paren_to_int(paren: String) -> Int {
 fn part1(problem: aoc.Problem(Int)) -> Int {
   string.split(problem.input, "")
   |> list.map(paren_to_int)
-  |> list.fold(0, fn(a, b) { a + b })
+  |> list.fold(0, fn(acc, step) { acc + step })
 }
 
 fn part2(problem: aoc.Problem(Int)) -> Int {
   let #(index, _) =
     string.split(problem.input, "")
     |> list.map(paren_to_int)
-    |> list.fold_until(#(1, 0), fn(a, b) {
-      case a.1 + b {
-        -1 -> list.Stop(#(a.0, -1))
-        floor -> list.Continue(#(a.0 + 1, floor))
+    // acc.0 = current index in file
+    // acc.1 = current floor
+    |> list.fold_until(#(1, 0), fn(acc, step) {
+      case acc.1 + step {
+        -1 -> list.Stop(#(acc.0, -1))
+        floor -> list.Continue(#(acc.0 + 1, floor))
       }
     })
 
