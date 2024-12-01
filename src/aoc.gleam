@@ -186,3 +186,14 @@ pub fn input_grapheme_mapper(
     }
   }
 }
+
+pub fn int_or_panic(value: String) -> Int {
+  case int.parse(value) {
+    Ok(v) -> v
+    _ -> {
+      io.println_error("could not parse integer '" <> value <> "'")
+
+      panic
+    }
+  }
+}

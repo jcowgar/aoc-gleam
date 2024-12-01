@@ -1,0 +1,72 @@
+import aoc.{type Problem}
+import gleam/dict
+import gleam/int
+import gleam/list
+import gleam/option
+import gleam/string
+
+type Answer =
+  Int
+
+fn parse_list_pair(value: String) -> Result(#(Int, Int), Nil) {
+  let assert [a, b] =
+    string.split(value, "   ")
+    |> list.map(aoc.int_or_panic)
+
+  Ok(#(a, b))
+}
+
+fn part1(problem: Problem(Answer)) -> Answer {
+  let input = aoc.input_line_mapper(problem, parse_list_pair)
+  let #(lista, listb) = list.unzip(input)
+
+  list.zip(list.sort(lista, int.compare), list.sort(listb, int.compare))
+  |> list.map(fn(a) { int.absolute_value(a.0 - a.1) })
+  |> list.fold(0, fn(a, b) { a + b })
+}
+
+fn part2(problem: Problem(Answer)) -> Answer {
+  let input = aoc.input_line_mapper(problem, parse_list_pair)
+  let #(lista, listb) = list.unzip(input)
+
+  list.map(lista, fn(a) { a * list.count(listb, fn(b) { b == a }) })
+  |> list.fold(0, fn(a, b) { a + b })
+}
+
+fn part2_using_dict(problem: Problem(Answer)) -> Answer {
+  let input = aoc.input_line_mapper(problem, parse_list_pair)
+  let #(lista, listb) = list.unzip(input)
+
+  let d =
+    list.fold(listb, dict.new(), fn(acc, v) {
+      dict.upsert(acc, v, fn(existing) {
+        case existing {
+          option.None -> 1
+          option.Some(existing_count) -> existing_count + 1
+        }
+      })
+    })
+
+  list.map(lista, fn(a) {
+    case dict.get(d, a) {
+      Ok(v) -> v * a
+      Error(_) -> 0
+    }
+  })
+  |> list.fold(0, fn(a, b) { a + b })
+}
+
+pub fn main() {
+  aoc.header(2024, 1)
+  aoc.problem(aoc.Test, 2024, 1, 1) |> aoc.expect(11) |> aoc.run(part1)
+  aoc.problem(aoc.Actual, 2024, 1, 1) |> aoc.expect(1_222_801) |> aoc.run(part1)
+
+  aoc.problem(aoc.Test, 2024, 1, 1) |> aoc.expect(31) |> aoc.run(part2)
+  aoc.problem(aoc.Actual, 2024, 1, 2)
+  |> aoc.expect(22_545_250)
+  |> aoc.run(part2)
+
+  aoc.problem(aoc.Actual, 2024, 1, 2)
+  |> aoc.expect(22_545_250)
+  |> aoc.run(part2_using_dict)
+}
