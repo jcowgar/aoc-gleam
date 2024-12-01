@@ -17,27 +17,30 @@ fn parse_list_pair(value: String) -> Result(#(Int, Int), Nil) {
 }
 
 fn part1(problem: Problem(Answer)) -> Answer {
-  let input = aoc.input_line_mapper(problem, parse_list_pair)
-  let #(lista, listb) = list.unzip(input)
+  let #(lista, listb) =
+    aoc.input_line_mapper(problem, parse_list_pair)
+    |> list.unzip()
 
   list.zip(list.sort(lista, int.compare), list.sort(listb, int.compare))
-  |> list.map(fn(a) { int.absolute_value(a.0 - a.1) })
-  |> list.fold(0, fn(a, b) { a + b })
+  |> list.fold(0, fn(sum, b) { sum + int.absolute_value(b.0 - b.1) })
 }
 
 fn part2(problem: Problem(Answer)) -> Answer {
-  let input = aoc.input_line_mapper(problem, parse_list_pair)
-  let #(lista, listb) = list.unzip(input)
+  let #(lista, listb) =
+    aoc.input_line_mapper(problem, parse_list_pair)
+    |> list.unzip()
 
-  list.map(lista, fn(a) { a * list.count(listb, fn(b) { b == a }) })
-  |> list.fold(0, fn(a, b) { a + b })
+  list.fold(lista, 0, fn(sum, a) {
+    sum + { a * list.count(listb, fn(b) { b == a }) }
+  })
 }
 
 fn part2_using_dict(problem: Problem(Answer)) -> Answer {
-  let input = aoc.input_line_mapper(problem, parse_list_pair)
-  let #(lista, listb) = list.unzip(input)
+  let #(lista, listb) =
+    aoc.input_line_mapper(problem, parse_list_pair)
+    |> list.unzip()
 
-  let d =
+  let frequencies =
     list.fold(listb, dict.new(), fn(acc, v) {
       dict.upsert(acc, v, fn(existing) {
         case existing {
@@ -47,17 +50,17 @@ fn part2_using_dict(problem: Problem(Answer)) -> Answer {
       })
     })
 
-  list.map(lista, fn(a) {
-    case dict.get(d, a) {
-      Ok(v) -> v * a
-      Error(_) -> 0
+  list.fold(lista, 0, fn(sum, a) {
+    case dict.get(frequencies, a) {
+      Ok(v) -> sum + { v * a }
+      Error(_) -> sum
     }
   })
-  |> list.fold(0, fn(a, b) { a + b })
 }
 
 pub fn main() {
   aoc.header(2024, 1)
+
   aoc.problem(aoc.Test, 2024, 1, 1) |> aoc.expect(11) |> aoc.run(part1)
   aoc.problem(aoc.Actual, 2024, 1, 1) |> aoc.expect(1_222_801) |> aoc.run(part1)
 
