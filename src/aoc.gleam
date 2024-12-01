@@ -163,11 +163,7 @@ pub fn input_line_mapper(
 ) -> List(b) {
   case problem.input |> string.split("\n") |> list.try_map(f) {
     Ok(values) -> values
-    Error(e) -> {
-      io.println_error(string.inspect(e))
-
-      panic
-    }
+    Error(e) -> panic as { string.inspect(e) }
   }
 }
 
@@ -179,21 +175,13 @@ pub fn input_grapheme_mapper(
 ) -> List(b) {
   case problem.input |> string.to_graphemes() |> list.try_map(f) {
     Ok(values) -> values
-    Error(e) -> {
-      io.println_error(string.inspect(e))
-
-      panic
-    }
+    Error(e) -> panic as string.inspect(e)
   }
 }
 
 pub fn int_or_panic(value: String) -> Int {
   case int.parse(value) {
     Ok(v) -> v
-    _ -> {
-      io.println_error("could not parse integer '" <> value <> "'")
-
-      panic
-    }
+    _ -> panic as { "could not parse integer '" <> value <> "'" }
   }
 }
