@@ -1,98 +1,80 @@
 import aoc.{type Problem}
 import gleam/list
 import gleam/option.{Some}
-import gleam/pair
 import gleam/regexp
 import gleam/string
 
-fn to_pairs(value: String) -> List(#(String, String)) {
-  let assert [last, ..rest] =
-    value
-    |> string.to_graphemes()
+const re_within_brackets_str = "\\[([^\\]]+)\\]"
 
-  list.fold(rest, #(last, []), fn(acc, ch) { #(ch, [#(acc.0, ch), ..acc.1]) })
-  |> pair.second()
-  |> list.reverse()
-}
-
-fn is_abba(pairs: List(#(String, String))) -> Bool {
-  pairs
-  |> list.window(3)
+fn is_abba(line: String) -> Bool {
+  string.to_graphemes(line)
+  |> list.window(4)
   |> list.any(fn(window) {
-    let assert [a, _, b] = window
-    a.0 == b.1 && a.1 == b.0 && a.0 != a.1
+    case window {
+      [a, b, c, d] -> a == d && b == c && a != b
+      _ -> False
+    }
   })
 }
 
-fn grab_matches(matches: regexp.Match) -> String {
+fn values_from_matches(matches: regexp.Match) -> String {
   let assert regexp.Match(_, [Some(m)]) = matches
 
   m
 }
 
 fn part1(problem: Problem(Int)) -> Int {
-  let assert Ok(re_within_brackets) = regexp.from_string("\\[([^\\]]+)\\]")
-
+  let assert Ok(re_within_brackets) = regexp.from_string(re_within_brackets_str)
   let abbas =
-    re_within_brackets
-    |> regexp.replace(problem.input, "-")
+    regexp.replace(re_within_brackets, problem.input, "-")
     |> string.split("\n")
-    |> list.map(fn(v) { v |> to_pairs() |> is_abba() })
-
+    |> list.map(is_abba)
   let negate_abbas =
-    problem.input
-    |> string.split("\n")
+    string.split(problem.input, "\n")
     |> list.map(fn(line) {
       re_within_brackets
       |> regexp.scan(line)
-      |> list.map(grab_matches)
+      |> list.map(values_from_matches)
       |> string.join("-")
     })
-    |> list.map(to_pairs)
     |> list.map(is_abba)
 
   list.zip(abbas, negate_abbas)
   |> list.count(fn(a) { a.0 && !a.1 })
 }
 
-fn is_aba(pairs: List(String)) -> List(#(Bool, String, String)) {
-  pairs
-  |> list.window(3)
-  |> list.map(fn(window) {
-    let assert [a, b, c] = window
-    #(a == c && a != b, a, b)
+fn only_abas(pairs: List(String)) -> List(#(String, String)) {
+  list.window(pairs, 3)
+  |> list.filter_map(fn(window) {
+    case window {
+      [a, b, c] if a == c && a != b -> Ok(#(a, b))
+      _ -> Error(Nil)
+    }
   })
-  |> list.filter(fn(v) { v.0 })
 }
 
 fn part2(problem: Problem(Int)) -> Int {
-  let assert Ok(re_within_brackets) = regexp.from_string("\\[([^\\]]+)\\]")
-
+  let assert Ok(re_within_brackets) = regexp.from_string(re_within_brackets_str)
   let abas =
-    re_within_brackets
-    |> regexp.replace(problem.input, "-")
+    regexp.replace(re_within_brackets, problem.input, "-")
     |> string.split("\n")
-    |> list.map(fn(line) { line |> string.to_graphemes |> is_aba() })
-
+    |> list.map(fn(line) { line |> string.to_graphemes |> only_abas() })
   let babs =
-    problem.input
-    |> string.split("\n")
+    string.split(problem.input, "\n")
     |> list.map(fn(line) {
-      re_within_brackets
-      |> regexp.scan(line)
-      |> list.map(grab_matches)
+      regexp.scan(re_within_brackets, line)
+      |> list.map(values_from_matches)
       |> string.join("-")
       |> string.to_graphemes()
-      |> is_aba()
+      |> only_abas()
     })
 
   list.zip(abas, babs)
-  |> list.map(fn(pairs) {
+  |> list.count(fn(pairs) {
     list.any(pairs.0, fn(a) {
-      list.any(pairs.1, fn(b) { a.0 && b.0 && a.1 == b.2 && a.2 == b.1 })
+      list.any(pairs.1, fn(b) { a.0 == b.1 && a.1 == b.0 })
     })
   })
-  |> list.count(fn(a) { a })
 }
 
 pub fn main() {
