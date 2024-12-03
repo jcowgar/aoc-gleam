@@ -11,10 +11,10 @@ const keypad_1 = "
 789"
 
 const keypad_2 = "
-  1  
- 234 
+  1
+ 234
 56789
- ABC 
+ ABC
   D  "
 
 type Move {
@@ -71,6 +71,7 @@ fn execute_moves(acc: #(Int, List(Int)), moves: List(Move)) {
 
 fn part1(problem: Problem(String)) -> String {
   create_keypad(keypad_1) |> io.debug()
+  create_keypad(keypad_2) |> io.debug()
 
   let result =
     aoc.input_line_mapper(problem, parse_move)
