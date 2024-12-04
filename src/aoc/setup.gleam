@@ -11,24 +11,25 @@ const gleam_source = "
 import aoc.{type Problem}
 import gleam/int
 
-type Answer = Int
-
-fn part1(problem: Problem(Answer)) -> Answer {
+fn part1(problem: Problem(Int)) -> Int {
   let input = aoc.input_line_mapper(problem, int.parse)
 
   0
 }
 
-fn part2(problem: Problem(Answer)) -> Answer {
-  let input = aoc.input_line_mapper(problem, int.parse)
-
-  0
-}
+// fn part2(problem: Problem(Int)) -> Int {
+//   let input = aoc.input_line_mapper(problem, int.parse)
+//
+//   0
+// }
 
 pub fn main() {
+	aoc.header({{year}}, {{day}})
+
   aoc.problem(aoc.Test, {{year}}, {{day}}, 1) |> aoc.expect(0) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, {{year}}, {{day}}, 1) |> aoc.expect(0) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, {{year}}, {{day}}, 2) |> aoc.expect(0) |> aoc.run(part2)
+  // aoc.problem(aoc.Actual, {{year}}, {{day}}, 1) |> aoc.expect(0) |> aoc.run(part1)
+
+	// aoc.problem(aoc.Actual, {{year}}, {{day}}, 2) |> aoc.expect(0) |> aoc.run(part2)
 }
 "
 
