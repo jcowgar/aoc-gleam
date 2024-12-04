@@ -52,19 +52,15 @@ fn compute_positions(
   width: Int,
   height: Int,
 ) -> List(List(Int)) {
-  let #(can_go_right, can_go_down, can_go_left, can_go_up) =
+  let #(can_go_right, can_go_down, can_go_left, _can_go_up) =
     what_directions_can_i_go(start_position, 3, width, height)
   let nums = list.range(0, 3)
 
   [
     // from start -> right
     check(can_go_right, list.map(nums, fn(n) { start_position + n })),
-    // from start -> left
-    check(can_go_left, list.map(nums, fn(n) { start_position - n })),
     // from start -> down
     check(can_go_down, list.map(nums, fn(n) { start_position + { n * width } })),
-    // from start -> up
-    check(can_go_up, list.map(nums, fn(n) { start_position - { n * width } })),
     // from start -> down and right
     check(
       can_go_down && can_go_right,
@@ -75,25 +71,13 @@ fn compute_positions(
       can_go_down && can_go_left,
       list.map(nums, fn(n) { start_position + { n * { width - 1 } } }),
     ),
-    // from start -> up and right
-    check(
-      can_go_up && can_go_right,
-      list.map(nums, fn(n) { start_position - { n * { width - 1 } } }),
-    ),
-    // from start -> up and left
-    check(
-      can_go_up && can_go_left,
-      list.map(nums, fn(n) { start_position - { n * { width + 1 } } }),
-    ),
   ]
   |> list.filter(fn(l) { l != [] })
 }
 
-fn get_word(d, indexes) -> Result(String, Nil) {
-  case list.try_map(indexes, fn(idx) { dict.get(d, idx) }) {
-    Ok(chars) -> Ok(string.join(chars, ""))
-    Error(_) -> Error(Nil)
-  }
+fn get_word(d, indexes) -> String {
+  list.map(indexes, fn(idx) { dict.get(d, idx) |> result.unwrap("") })
+  |> string.join("")
 }
 
 fn part1(problem: Problem(Int)) -> Int {
@@ -103,7 +87,10 @@ fn part1(problem: Problem(Int)) -> Int {
   list.range(0, { data.0 * data.1 } - 1)
   |> list.map(fn(start_index) {
     compute_positions(start_index, data.0, data.1)
-    |> list.count(fn(p) { get_word(d, p) == Ok("XMAS") })
+    |> list.count(fn(p) {
+      let word = get_word(d, p)
+      word == "XMAS" || word == "SAMX"
+    })
   })
   |> int.sum()
 }
@@ -133,12 +120,7 @@ fn part2(problem: Problem(Int)) -> Int {
   list.range(0, { data.0 * data.1 } - 1)
   |> list.count(fn(start_index) {
     case compute_x_positions(start_index, data.0, data.1) {
-      [a, b] -> {
-        case get_word(d, a), get_word(d, b) {
-          Ok(wa), Ok(wb) -> is_mas(wa) && is_mas(wb)
-          _, _ -> False
-        }
-      }
+      [a, b] -> is_mas(get_word(d, a)) && is_mas(get_word(d, b))
       _ -> False
     }
   })
