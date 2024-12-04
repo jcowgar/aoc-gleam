@@ -23,6 +23,23 @@ fn parse_input(input: String) {
   )
 }
 
+fn what_directions_can_i_go(
+  start_position,
+  count,
+  width,
+  height,
+) -> #(Bool, Bool, Bool, Bool) {
+  let start_column = start_position % width
+  let start_row = { start_position - start_column } / height
+
+  let can_go_right = start_column + count < width
+  let can_go_left = start_column - count >= 0
+  let can_go_down = start_row + count < height
+  let can_go_up = start_row - count >= 0
+
+  #(can_go_right, can_go_down, can_go_left, can_go_up)
+}
+
 fn check(condition, list) {
   case condition {
     True -> list
@@ -35,31 +52,9 @@ fn compute_positions(
   width: Int,
   height: Int,
 ) -> List(List(Int)) {
+  let #(can_go_right, can_go_down, can_go_left, can_go_up) =
+    what_directions_can_i_go(start_position, 3, width, height)
   let nums = list.range(0, 3)
-  let start_column = start_position % width
-  let start_row = { start_position - start_column } / height
-
-  let can_go_right = start_column + 3 < width
-  let can_go_left = start_column - 3 >= 0
-  let can_go_down = start_row + 3 < height
-  let can_go_up = start_row - 3 >= 0
-
-  // io.debug(#(
-  //   "sp",
-  //   start_position,
-  //   "sr",
-  //   start_row,
-  //   "sc",
-  //   start_column,
-  //   "cgl",
-  //   can_go_left,
-  //   "cgr",
-  //   can_go_right,
-  //   "cgd",
-  //   can_go_down,
-  //   "cgu",
-  //   can_go_up,
-  // ))
 
   [
     // from start -> right
@@ -94,6 +89,13 @@ fn compute_positions(
   |> list.filter(fn(l) { l != [] })
 }
 
+fn get_word(d, indexes) -> Result(String, Nil) {
+  case list.try_map(indexes, fn(idx) { dict.get(d, idx) }) {
+    Ok(chars) -> Ok(string.join(chars, ""))
+    Error(_) -> Error(Nil)
+  }
+}
+
 fn part1(problem: Problem(Int)) -> Int {
   let data = parse_input(problem.input)
   let d = data.3
@@ -101,23 +103,46 @@ fn part1(problem: Problem(Int)) -> Int {
   list.range(0, { data.0 * data.1 } - 1)
   |> list.map(fn(start_index) {
     compute_positions(start_index, data.0, data.1)
-    |> list.count(fn(p) {
-      let assert [xi, mi, ai, si] = p
-
-      dict.get(d, xi) == Ok("X")
-      && dict.get(d, mi) == Ok("M")
-      && dict.get(d, ai) == Ok("A")
-      && dict.get(d, si) == Ok("S")
-    })
+    |> list.count(fn(p) { get_word(d, p) == Ok("XMAS") })
   })
   |> int.sum()
 }
 
-// fn part2(problem: Problem(Int)) -> Int {
-//   let input = aoc.input_line_mapper(problem, int.parse)
-//
-//   0
-// }
+fn compute_x_positions(
+  start_position: Int,
+  width: Int,
+  height: Int,
+) -> List(List(Int)) {
+  let #(can_go_right, can_go_down, can_go_left, can_go_up) =
+    what_directions_can_i_go(start_position, 1, width, height)
+
+  case can_go_up && can_go_down && can_go_right && can_go_left {
+    True -> [
+      [start_position - width - 1, start_position, start_position + width + 1],
+      [start_position - width + 1, start_position, start_position + width - 1],
+    ]
+    False -> []
+  }
+}
+
+fn part2(problem: Problem(Int)) -> Int {
+  let is_mas = fn(v) { v == "MAS" || v == "SAM" }
+  let data = parse_input(problem.input)
+  let d = data.3
+
+  list.range(0, { data.0 * data.1 } - 1)
+  |> list.count(fn(start_index) {
+    case compute_x_positions(start_index, data.0, data.1) {
+      [a, b] -> {
+        case get_word(d, a), get_word(d, b) {
+          Ok(wa), Ok(wb) -> is_mas(wa) && is_mas(wb)
+          _, _ -> False
+        }
+      }
+      _ -> False
+    }
+  })
+}
 
 pub fn main() {
   aoc.header(2024, 4)
@@ -125,5 +150,7 @@ pub fn main() {
   aoc.problem(aoc.Test, 2024, 4, 0) |> aoc.expect(3) |> aoc.run(part1)
   aoc.problem(aoc.Test, 2024, 4, 1) |> aoc.expect(18) |> aoc.run(part1)
   aoc.problem(aoc.Actual, 2024, 4, 1) |> aoc.expect(2358) |> aoc.run(part1)
-  // aoc.problem(aoc.Actual, 2024, 4, 2) |> aoc.expect(0) |> aoc.run(part2)
+
+  aoc.problem(aoc.Test, 2024, 4, 1) |> aoc.expect(9) |> aoc.run(part2)
+  aoc.problem(aoc.Actual, 2024, 4, 2) |> aoc.expect(1737) |> aoc.run(part2)
 }
