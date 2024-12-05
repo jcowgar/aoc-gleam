@@ -4,3 +4,4 @@
 erl_crash.dump
 input.txt
 .env
+.DS_Store
