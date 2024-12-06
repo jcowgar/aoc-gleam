@@ -1,5 +1,6 @@
 import aoc.{type Problem}
 import gleam/list
+import gleam/order
 import gleam/result
 import gleam/set
 import gleam/string
@@ -48,16 +49,14 @@ fn validate_updates(rules, updates) {
   })
 }
 
-fn only_updates_where(
+fn updates_where(
   updates: List(#(Bool, #(List(Int), List(#(Int, Int))))),
   valid valid,
 ) {
   list.filter_map(updates, fn(update) {
-    case update.0 {
-      False if valid -> Error(Nil)
-      True if valid -> Ok(update.1.0)
-      True -> Error(Nil)
-      False -> Ok(update.1.0)
+    case update.0 == valid {
+      True -> Ok(update.1.0)
+      False -> Error(Nil)
     }
   })
 }
@@ -77,32 +76,23 @@ fn part1(problem: Problem(Int)) -> Int {
   let #(rules, updates) = parse_input(problem.input)
 
   validate_updates(rules, updates)
-  |> only_updates_where(valid: True)
+  |> updates_where(valid: True)
   |> sum_middle_values()
-}
-
-fn make_valid(rules, update, acc) {
-  case update {
-    [] -> []
-    [a] -> [a, ..acc] |> list.reverse()
-    [a, b, ..rest] -> {
-      case is_valid(rules, #(a, b)) {
-        True -> make_valid(rules, [b, ..rest], [a, ..acc])
-        False -> {
-          let new_update = list.flatten([acc |> list.reverse(), [b, a], rest])
-          make_valid(rules, new_update, [])
-        }
-      }
-    }
-  }
 }
 
 fn part2(problem: Problem(Int)) -> Int {
   let #(rules, updates) = parse_input(problem.input)
 
   validate_updates(rules, updates)
-  |> only_updates_where(valid: False)
-  |> list.map(fn(update) { make_valid(rules, update, []) })
+  |> updates_where(valid: False)
+  |> list.map(fn(update) {
+    list.sort(update, fn(a, b) {
+      case is_valid(rules, #(a, b)) {
+        True -> order.Lt
+        False -> order.Gt
+      }
+    })
+  })
   |> sum_middle_values()
 }
 
