@@ -11,7 +11,7 @@ type Answer =
 fn parse_list_pair(value: String) -> Result(#(Int, Int), Nil) {
   let assert [a, b] =
     string.split(value, "   ")
-    |> list.map(aoc.int_or_panic)
+    |> list.map(aoc.int)
 
   Ok(#(a, b))
 }

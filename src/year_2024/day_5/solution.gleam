@@ -13,13 +13,13 @@ fn parse_rules(rules) {
   |> list.fold(set.new(), fn(acc, rule) {
     let assert [a, b] = string.split(rule, "|")
 
-    set.insert(acc, #(aoc.int_or_panic(b), aoc.int_or_panic(a)))
+    set.insert(acc, #(aoc.int(b), aoc.int(a)))
   })
 }
 
 fn parse_updates(updates) {
   string.split(updates, "\n")
-  |> list.map(fn(line) { string.split(line, ",") |> list.map(aoc.int_or_panic) })
+  |> list.map(fn(line) { string.split(line, ",") |> list.map(aoc.int) })
 }
 
 fn parse_input(input: String) -> #(set.Set(#(Int, Int)), List(Update)) {

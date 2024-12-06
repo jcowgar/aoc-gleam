@@ -4,7 +4,7 @@ import gleam/pair
 import gleam/string
 
 // Safe levels are:
-// 
+//
 // 1. The levels are either all increasing or all decreasing.
 // 2. Any two adjacent levels differ by at least one and at most three.
 
@@ -30,7 +30,7 @@ fn is_safe_level_sorta(level: List(Int)) -> Bool {
 }
 
 fn parse_report(line: String) -> Result(List(Int), Nil) {
-  string.split(line, " ") |> list.map(aoc.int_or_panic) |> Ok()
+  string.split(line, " ") |> list.map(aoc.int) |> Ok()
 }
 
 fn part1(problem: Problem(Int)) -> Int {

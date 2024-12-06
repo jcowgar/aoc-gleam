@@ -13,9 +13,9 @@ fn part1(problem: Problem(Int)) -> Int {
     |> list.map(fn(match) {
       let assert Match(_, [Some(l), Some(w), Some(h)]) = match
 
-      let l = aoc.int_or_panic(l)
-      let w = aoc.int_or_panic(w)
-      let h = aoc.int_or_panic(h)
+      let l = aoc.int(l)
+      let w = aoc.int(w)
+      let h = aoc.int(h)
 
       let additional_sqft =
         [l * w, w * h, h * l]
@@ -39,9 +39,9 @@ fn part2(problem: Problem(Int)) -> Int {
     |> list.map(fn(match) {
       let assert Match(_, [Some(l), Some(w), Some(h)]) = match
 
-      let l = aoc.int_or_panic(l)
-      let w = aoc.int_or_panic(w)
-      let h = aoc.int_or_panic(h)
+      let l = aoc.int(l)
+      let w = aoc.int(w)
+      let h = aoc.int(h)
 
       let #(_, a, b) =
         [#(l * w, l, w), #(w * h, w, h), #(h * l, h, l)]

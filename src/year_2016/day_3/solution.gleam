@@ -12,7 +12,7 @@ fn parse_triangle(line: String) -> Result(#(Bool, Int, Int, Int), Nil) {
     |> list.filter_map(fn(a) {
       case a {
         "" -> Error(Nil)
-        _ -> aoc.int_or_panic(a) |> Ok()
+        _ -> aoc.int(a) |> Ok()
       }
     })
     |> list.sort(int.compare)
@@ -40,7 +40,7 @@ fn parse_triangle_2(line: String) -> Result(List(Int), Nil) {
     |> list.filter_map(fn(a) {
       case a {
         "" -> Error(Nil)
-        _ -> aoc.int_or_panic(a) |> Ok()
+        _ -> aoc.int(a) |> Ok()
       }
     })
 

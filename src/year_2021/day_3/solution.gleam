@@ -8,7 +8,7 @@ type BitPopularity {
   BitPopularity(zero: Int, one: Int)
 }
 
-fn int_or_panic(value: String) -> Int {
+fn int(value: String) -> Int {
   case int.parse(value) {
     Ok(v) -> v
     Error(e) -> {
@@ -47,7 +47,7 @@ fn part1(problem: aoc.Problem(Int)) -> Int {
   let lines =
     problem.input
     |> string.split("\n")
-    |> list.map(fn(v) { string.split(v, "") |> list.map(int_or_panic) })
+    |> list.map(fn(v) { string.split(v, "") |> list.map(int) })
   let assert [head, ..] = lines
   let acc = list.map(head, fn(_) { BitPopularity(0, 0) })
   let result =

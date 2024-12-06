@@ -24,8 +24,8 @@ type Person {
 
 fn parse_block_instruction(instruction: String) -> Move {
   case instruction {
-    "L" <> count -> Left(aoc.int_or_panic(count))
-    "R" <> count -> Right(aoc.int_or_panic(count))
+    "L" <> count -> Left(aoc.int(count))
+    "R" <> count -> Right(aoc.int(count))
     _ -> panic as { "count not parse instruction '" <> instruction <> "'" }
   }
 }

@@ -14,7 +14,7 @@ fn solve(pattern: String, line: String) -> Int {
       Match("don't()", _) -> #(False, acc.1)
       Match(_, [Some(a), Some(b)]) if acc.0 -> #(
         True,
-        acc.1 + { aoc.int_or_panic(a) * aoc.int_or_panic(b) },
+        acc.1 + { aoc.int(a) * aoc.int(b) },
       )
       _ -> acc
     }

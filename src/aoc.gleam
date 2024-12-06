@@ -179,7 +179,9 @@ pub fn input_grapheme_mapper(
   }
 }
 
-pub fn int_or_panic(value: String) -> Int {
+/// Parse `value` as an integer or panic.
+///
+pub fn int(value: String) -> Int {
   case int.parse(value) {
     Ok(v) -> v
     _ -> panic as { "could not parse integer '" <> value <> "'" }

@@ -13,7 +13,7 @@ type Location {
   Location(horizontal: Int, depth: Int, aim: Int)
 }
 
-fn int_or_panic(value: String) -> Int {
+fn int(value: String) -> Int {
   case int.parse(value) {
     Ok(v) -> v
     Error(_) -> {
@@ -26,9 +26,9 @@ fn int_or_panic(value: String) -> Int {
 
 fn parse_line(line: String) -> Result(Move, String) {
   case line {
-    "forward " <> count -> Ok(Forward(int_or_panic(count)))
-    "down " <> count -> Ok(Down(int_or_panic(count)))
-    "up " <> count -> Ok(Up(int_or_panic(count)))
+    "forward " <> count -> Ok(Forward(int(count)))
+    "down " <> count -> Ok(Down(int(count)))
+    "up " <> count -> Ok(Up(int(count)))
     _ -> Error("could not parse line `" <> line <> "`")
   }
 }
