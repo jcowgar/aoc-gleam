@@ -29,23 +29,32 @@ fn parse_input(input: String) -> #(set.Set(#(Int, Int)), List(Update)) {
   #(parse_rules(rule_lines), parse_updates(update_lines))
 }
 
-fn is_valid(rules, rule) {
-  set.contains(rules, rule) == False
+fn is_valid(rules, sequence) {
+  set.contains(rules, sequence) == False
+}
+
+/// Create a list of sequences that contain all values after it
+/// and the value itself.
+///
+fn sequences(values, acc) {
+  case values {
+    [] -> acc |> list.reverse()
+    [a, ..rest] ->
+      list.flatten([sequence_loop(a, rest, []), sequences(rest, [])])
+  }
+}
+
+fn sequence_loop(head, rest, acc) {
+  case rest {
+    [] -> acc |> list.reverse()
+    [a, ..rest] -> sequence_loop(head, rest, [#(head, a), ..acc])
+  }
 }
 
 fn validate_updates(rules, updates) {
-  list.map(updates, fn(update) {
-    let rules =
-      list.window(update, 2)
-      |> list.map(fn(update) {
-        let assert [a, b] = update
-        #(a, b)
-      })
-
-    #(update, rules)
-  })
+  list.map(updates, fn(update) { #(update, sequences(update, [])) })
   |> list.map(fn(update) {
-    #(list.all(update.1, fn(rule) { is_valid(rules, rule) }), update)
+    #(list.all(update.1, fn(sequence) { is_valid(rules, sequence) }), update)
   })
 }
 
