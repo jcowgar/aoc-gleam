@@ -1,59 +1,38 @@
 import aoc.{type Problem}
 import gleam/int
 import gleam/list
-import gleam/option.{Some}
-import gleam/regexp.{Match}
 import gleam/result
+import gleam/string
 
 fn part1(problem: Problem(Int)) -> Int {
-  let assert Ok(re_lwh) = regexp.from_string("(\\d+)x(\\d+)x(\\d+)")
-
   aoc.input_line_mapper(problem, fn(line) {
-    regexp.scan(re_lwh, line)
-    |> list.map(fn(match) {
-      let assert Match(_, [Some(l), Some(w), Some(h)]) = match
+    let assert [l, w, h] = string.split(line, "x") |> list.map(aoc.int)
 
-      let l = aoc.int(l)
-      let w = aoc.int(w)
-      let h = aoc.int(h)
+    let additional_sqft =
+      [l * w, w * h, h * l]
+      |> list.sort(int.compare)
+      |> list.first()
+      |> result.unwrap(0)
 
-      let additional_sqft =
-        [l * w, w * h, h * l]
-        |> list.sort(int.compare)
-        |> list.first()
-        |> result.unwrap(0)
-
-      { 2 * l * w } + { 2 * w * h } + { 2 * h * l } + additional_sqft
-    })
+    { 2 * l * w } + { 2 * w * h } + { 2 * h * l } + additional_sqft
     |> Ok()
   })
-  |> list.flatten()
   |> int.sum()
 }
 
 fn part2(problem: Problem(Int)) -> Int {
-  let assert Ok(re_lwh) = regexp.from_string("(\\d+)x(\\d+)x(\\d+)")
-
   aoc.input_line_mapper(problem, fn(line) {
-    regexp.scan(re_lwh, line)
-    |> list.map(fn(match) {
-      let assert Match(_, [Some(l), Some(w), Some(h)]) = match
+    let assert [l, w, h] = string.split(line, "x") |> list.map(aoc.int)
 
-      let l = aoc.int(l)
-      let w = aoc.int(w)
-      let h = aoc.int(h)
+    let #(_, a, b) =
+      [#(l * w, l, w), #(w * h, w, h), #(h * l, h, l)]
+      |> list.sort(fn(a, b) { int.compare(a.0, b.0) })
+      |> list.first()
+      |> result.unwrap(#(0, 0, 0))
 
-      let #(_, a, b) =
-        [#(l * w, l, w), #(w * h, w, h), #(h * l, h, l)]
-        |> list.sort(fn(a, b) { int.compare(a.0, b.0) })
-        |> list.first()
-        |> result.unwrap(#(0, 0, 0))
-
-      { a + a + b + b } + l * w * h
-    })
+    { a + a + b + b } + l * w * h
     |> Ok()
   })
-  |> list.flatten()
   |> int.sum()
 }
 
