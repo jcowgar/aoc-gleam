@@ -3,9 +3,10 @@ import gleam/list
 
 fn paren_to_int(paren: String) -> Result(Int, Nil) {
   case paren {
-    "(" -> Ok(1)
-    _ -> Ok(-1)
+    "(" -> 1
+    _ -> -1
   }
+  |> Ok()
 }
 
 fn part1(problem: aoc.Problem(Int)) -> Int {
