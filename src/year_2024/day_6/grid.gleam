@@ -10,8 +10,9 @@ pub type Turn {
   Left
 }
 
-pub fn turn(current: Direction, direction: Turn) {
-  case current, direction {
+/// Turn from `current` direction to the new direction.
+pub fn turn(current: Direction, turn: Turn) {
+  case current, turn {
     North, Right -> East
     North, Left -> West
     East, Right -> South
@@ -20,6 +21,17 @@ pub fn turn(current: Direction, direction: Turn) {
     South, Left -> East
     West, Right -> North
     West, Left -> South
+  }
+}
+
+/// Reverse the direction.
+///
+pub fn reverse(current: Direction) -> Direction {
+  case current {
+    North -> South
+    East -> West
+    South -> North
+    West -> East
   }
 }
 
