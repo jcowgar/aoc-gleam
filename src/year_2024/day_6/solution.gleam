@@ -1,5 +1,6 @@
 import aoc.{type Problem}
 import gleam/list
+import gleam/otp/task
 import gleam/set.{type Set}
 import gleam/string
 import glearray
@@ -116,6 +117,24 @@ fn part2(problem: Problem(Int)) -> Int {
   })
 }
 
+fn part2_using_tasks(problem: Problem(Int)) -> Int {
+  let #(grid, guard, obstacles) = parse_data(problem.input)
+
+  find_visited(set.new(), grid, guard, obstacles)
+  |> list.map(fn(additional_obstacle_index) {
+    task.async(fn() {
+      does_loop(0, grid, guard, obstacles, additional_obstacle_index)
+    })
+  })
+  |> task.try_await_all(1000)
+  |> list.fold(0, fn(acc, result) {
+    case result {
+      Ok(value) -> value + acc
+      Error(_) -> panic as "task failed"
+    }
+  })
+}
+
 pub fn main() {
   aoc.header(2024, 6)
 
@@ -123,4 +142,7 @@ pub fn main() {
   aoc.problem(aoc.Actual, 2024, 6, 1) |> aoc.expect(4696) |> aoc.run(part1)
   aoc.problem(aoc.Test, 2024, 6, 1) |> aoc.expect(6) |> aoc.run(part2)
   aoc.problem(aoc.Actual, 2024, 6, 2) |> aoc.expect(1443) |> aoc.run(part2)
+  aoc.problem(aoc.Actual, 2024, 6, 2)
+  |> aoc.expect(1443)
+  |> aoc.run(part2_using_tasks)
 }
