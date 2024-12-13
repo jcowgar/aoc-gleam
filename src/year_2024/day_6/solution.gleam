@@ -4,9 +4,9 @@ import gleam/otp/task
 import gleam/set.{type Set}
 import gleam/string
 import glearray
-import support/grid.{
-  type Direction, type Grid, East, Grid, North, Right, South, West,
-}
+import support/grid.{type Grid, Grid}
+import support/grid/direction.{type Direction, East, North, South, West}
+import support/grid/turn.{Right}
 
 type Guard {
   Guard(location: Int, direction: Direction)
@@ -55,7 +55,7 @@ fn find_visited(locations: Set(Int), grid, guard: Guard, obstacles) -> List(Int)
       case glearray.get(obstacles, new_guard.location) {
         Ok(1) -> {
           let new_guard =
-            Guard(guard.location, grid.turn(guard.direction, Right))
+            Guard(guard.location, turn.to(Right, from: guard.direction))
           find_visited(new_visited_locations, grid, new_guard, obstacles)
         }
         Ok(_) -> find_visited(new_visited_locations, grid, new_guard, obstacles)
@@ -89,8 +89,10 @@ fn does_loop(
             new_guard.location == temp_obstacle_idx,
             glearray.get(obstacles, new_guard.location)
           {
-            True, _ -> Guard(guard.location, grid.turn(guard.direction, Right))
-            _, Ok(1) -> Guard(guard.location, grid.turn(guard.direction, Right))
+            True, _ ->
+              Guard(guard.location, turn.to(Right, from: guard.direction))
+            _, Ok(1) ->
+              Guard(guard.location, turn.to(Right, from: guard.direction))
             _, Ok(_) -> new_guard
             _, Error(_) -> panic as "tried to move to an invalid location"
           }
@@ -140,6 +142,7 @@ pub fn main() {
 
   aoc.problem(aoc.Test, 2024, 6, 1) |> aoc.expect(41) |> aoc.run(part1)
   aoc.problem(aoc.Actual, 2024, 6, 1) |> aoc.expect(4696) |> aoc.run(part1)
+
   aoc.problem(aoc.Test, 2024, 6, 1) |> aoc.expect(6) |> aoc.run(part2)
   aoc.problem(aoc.Actual, 2024, 6, 2) |> aoc.expect(1443) |> aoc.run(part2)
   aoc.problem(aoc.Actual, 2024, 6, 2)

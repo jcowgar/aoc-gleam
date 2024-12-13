@@ -6,8 +6,8 @@ import gleam/option.{None, Some}
 import gleam/result
 import gleam/set
 import gleam/string
-
 import support/grid.{type Grid, Grid}
+import support/grid/position.{Position}
 
 type Bag(a) =
   Dict(a, List(a))
@@ -72,34 +72,26 @@ fn part1(problem: Problem(Int)) -> Int {
     })
 
   list.fold(dict.keys(bag), set.new(), fn(acc, key) {
-    // io.debug(#("key", key))
-
     let assert Ok(indexes) = dict.get(bag, key)
     let sub_list_indexes = list_to_sublists(indexes)
-    // |> io.debug()
 
     list.fold(sub_list_indexes, acc, fn(acc, indexes) {
       let assert [head, ..rest] = indexes
-      let head_row_col = grid.row_col_from_index(g, head)
+      let head_xy = grid.position_from_index(g, head)
 
       list.fold(rest, acc, fn(acc, sub_index) {
-        let this_row_col = grid.row_col_from_index(g, sub_index)
-        let #(row_diff, col_diff) =
-          grid.row_col_diff(this_row_col, head_row_col)
+        let this_xy = grid.position_from_index(g, sub_index)
+        let #(x_diff, y_diff) = position.difference(this_xy, head_xy)
 
-        let antinode_up_right = #(
-          head_row_col.0 - row_diff,
-          head_row_col.1 - col_diff,
-        )
-        let antinode_down_left = #(
-          this_row_col.0 + row_diff,
-          this_row_col.1 + col_diff,
-        )
+        let antinode_from_head =
+          Position(head_xy.x - x_diff, head_xy.y - y_diff)
+        let antinode_from_this =
+          Position(this_xy.x + x_diff, this_xy.y + y_diff)
 
-        let antinode_up_right_index =
-          grid.row_col_to_index(g, antinode_up_right.0, antinode_up_right.1)
-        let antinode_down_left_index =
-          grid.row_col_to_index(g, antinode_down_left.0, antinode_down_left.1)
+        let antinode_from_head_index =
+          grid.position_to_index(g, antinode_from_head)
+        let antinode_from_this_index =
+          grid.position_to_index(g, antinode_from_this)
 
         // io.debug(#(
         //   "indexes",
@@ -109,23 +101,23 @@ fn part1(problem: Problem(Int)) -> Int {
         //   "col_diff",
         //   col_diff,
         //   "head row",
-        //   head_row_col,
+        //   head_xy,
         //   "antinode up/right",
-        //   antinode_up_right,
+        //   antinode_from_head,
         //   "antinode down/left",
-        //   antinode_down_left,
+        //   antinode_from_this,
         // ))
 
         case
-          grid.valid_index(g, antinode_up_right_index),
-          grid.valid_index(g, antinode_down_left_index)
+          grid.is_valid_index(g, antinode_from_head_index),
+          grid.is_valid_index(g, antinode_from_this_index)
         {
           True, True ->
             acc
-            |> set.insert(antinode_up_right_index)
-            |> set.insert(antinode_down_left_index)
-          True, False -> acc |> set.insert(antinode_up_right_index)
-          False, True -> acc |> set.insert(antinode_down_left_index)
+            |> set.insert(antinode_from_head_index)
+            |> set.insert(antinode_from_this_index)
+          True, False -> acc |> set.insert(antinode_from_head_index)
+          False, True -> acc |> set.insert(antinode_from_this_index)
           False, False -> acc
         }
       })
@@ -142,12 +134,9 @@ fn part1(problem: Problem(Int)) -> Int {
 // }
 
 pub fn main() {
-  grid.test_grid()
-
   aoc.header(2024, 8)
-
   aoc.problem(aoc.Test, 2024, 8, 1) |> aoc.expect(14) |> aoc.run(part1)
-  // 439 too high
-  aoc.problem(aoc.Actual, 2024, 8, 1) |> aoc.expect(0) |> aoc.run(part1)
-  // aoc.problem(aoc.Actual, 2024, 8, 2) |> aoc.expect(0) |> aoc.run(part2)
+  // // 439 too high
+  // aoc.problem(aoc.Actual, 2024, 8, 1) |> aoc.expect(0) |> aoc.run(part1)
+  // // aoc.problem(aoc.Actual, 2024, 8, 2) |> aoc.expect(0) |> aoc.run(part2)
 }
