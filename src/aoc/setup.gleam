@@ -14,13 +14,13 @@ import gleam/int
 fn part1(problem: Problem(Int)) -> Int {
   let input = aoc.input_line_mapper(problem, int.parse)
 
-  0
+  -1
 }
 
 // fn part2(problem: Problem(Int)) -> Int {
 //   let input = aoc.input_line_mapper(problem, int.parse)
 //
-//   0
+//   -1
 // }
 
 pub fn main() {
