@@ -18,3 +18,11 @@ watch year day:
 work year day:
 	@just setup {{year}} {{day}}
 	@just watch {{year}} {{day}}
+
+# Test
+test:
+    @gleam test
+
+# Run tests in watch mode.
+test-watch:
+    @zsh -c "while sleep 0.1; do fd -e gleam | entr -d gleam test ; done"
