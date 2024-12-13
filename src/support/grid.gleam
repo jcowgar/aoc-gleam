@@ -24,6 +24,15 @@ pub fn is_valid_index(g: Grid, index: Int) -> Bool {
   index >= 0 && index < size(g)
 }
 
+/// Check to see if `position` is a valid position in the grid.
+///
+pub fn is_valid_position(g: Grid, position: Position) -> Bool {
+  position.x > 0
+  && position.x <= g.columns
+  && position.y > 0
+  && position.y <= g.rows
+}
+
 /// Check if the two given `index1` and `index2` are in the same row.
 ///
 pub fn is_same_row(g: Grid, index1: Int, index2: Int) -> Bool {
