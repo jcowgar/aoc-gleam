@@ -121,10 +121,12 @@ pub fn main() {
   test_parser()
 
   aoc.header(2016, 1)
-  aoc.problem(aoc.Test, 2016, 1, 1) |> aoc.expect(5) |> aoc.run(part1)
-  aoc.problem(aoc.Test, 2016, 1, 2) |> aoc.expect(2) |> aoc.run(part1)
-  aoc.problem(aoc.Test, 2016, 1, 3) |> aoc.expect(12) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2016, 1, 1) |> aoc.expect(239) |> aoc.run(part1)
-  aoc.problem(aoc.Test, 2016, 1, 4) |> aoc.expect(4) |> aoc.run(part2)
-  aoc.problem(aoc.Actual, 2016, 1, 2) |> aoc.expect(141) |> aoc.run(part2)
+
+  aoc.sample(2016, 1, 1, 1) |> aoc.expect(5) |> aoc.run(part1)
+  aoc.sample(2016, 1, 1, 2) |> aoc.expect(2) |> aoc.run(part1)
+  aoc.sample(2016, 1, 1, 3) |> aoc.expect(12) |> aoc.run(part1)
+  aoc.problem(2016, 1, 1) |> aoc.expect(239) |> aoc.run(part1)
+
+  aoc.sample(2016, 1, 2, 4) |> aoc.expect(4) |> aoc.run(part2)
+  aoc.problem(2016, 1, 2) |> aoc.expect(141) |> aoc.run(part2)
 }

@@ -83,14 +83,14 @@ pub fn main() {
 
   aoc.header(2024, 11)
 
-  aoc.problem(aoc.Test, 2024, 11, 1) |> aoc.expect(55_312) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2024, 11, 1) |> aoc.expect(220_722) |> aoc.run(part1)
+  aoc.sample(2024, 11, 1, 1) |> aoc.expect(55_312) |> aoc.run(part1)
+  aoc.problem(2024, 11, 1) |> aoc.expect(220_722) |> aoc.run(part1)
 
-  aoc.problem(aoc.Test, 2024, 11, 1)
+  aoc.sample(2024, 11, 1, 1)
   |> aoc.expect(65_601_038_650_482)
   |> aoc.run(part2)
 
-  aoc.problem(aoc.Actual, 2024, 11, 2)
+  aoc.problem(2024, 11, 2)
   |> aoc.expect(261_952_051_690_787)
   |> aoc.run(part2)
 }

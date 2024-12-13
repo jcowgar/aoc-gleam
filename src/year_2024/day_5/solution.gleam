@@ -108,9 +108,9 @@ fn part2(problem: Problem(Int)) -> Int {
 pub fn main() {
   aoc.header(2024, 5)
 
-  aoc.problem(aoc.Test, 2024, 5, 1) |> aoc.expect(143) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2024, 5, 1) |> aoc.expect(7365) |> aoc.run(part1)
+  aoc.sample(2024, 5, 1, 1) |> aoc.expect(143) |> aoc.run(part1)
+  aoc.problem(2024, 5, 1) |> aoc.expect(7365) |> aoc.run(part1)
 
-  aoc.problem(aoc.Test, 2024, 5, 1) |> aoc.expect(123) |> aoc.run(part2)
-  aoc.problem(aoc.Actual, 2024, 5, 2) |> aoc.expect(5770) |> aoc.run(part2)
+  aoc.sample(2024, 5, 1, 1) |> aoc.expect(123) |> aoc.run(part2)
+  aoc.problem(2024, 5, 2) |> aoc.expect(5770) |> aoc.run(part2)
 }

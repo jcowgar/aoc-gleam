@@ -140,12 +140,12 @@ fn part2_using_tasks(problem: Problem(Int)) -> Int {
 pub fn main() {
   aoc.header(2024, 6)
 
-  aoc.problem(aoc.Test, 2024, 6, 1) |> aoc.expect(41) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2024, 6, 1) |> aoc.expect(4696) |> aoc.run(part1)
+  aoc.sample(2024, 6, 1, 1) |> aoc.expect(41) |> aoc.run(part1)
+  aoc.problem(2024, 6, 1) |> aoc.expect(4696) |> aoc.run(part1)
 
-  aoc.problem(aoc.Test, 2024, 6, 1) |> aoc.expect(6) |> aoc.run(part2)
-  aoc.problem(aoc.Actual, 2024, 6, 2) |> aoc.expect(1443) |> aoc.run(part2)
-  aoc.problem(aoc.Actual, 2024, 6, 2)
+  aoc.sample(2024, 6, 1, 1) |> aoc.expect(6) |> aoc.run(part2)
+  aoc.problem(2024, 6, 2) |> aoc.expect(1443) |> aoc.run(part2)
+  aoc.problem(2024, 6, 2)
   |> aoc.expect(1443)
   |> aoc.run(part2_using_tasks)
 }

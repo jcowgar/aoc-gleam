@@ -69,10 +69,10 @@ fn part2(problem: Problem(Int)) -> Int {
 pub fn main() {
   aoc.header(2015, 3)
 
-  aoc.problem(aoc.Test, 2015, 3, 1) |> aoc.expect(5) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2015, 3, 1) |> aoc.expect(2565) |> aoc.run(part1)
+  aoc.sample(2015, 3, 1, 1) |> aoc.expect(5) |> aoc.run(part1)
+  aoc.problem(2015, 3, 1) |> aoc.expect(2565) |> aoc.run(part1)
 
-  aoc.problem(aoc.Test, 2015, 3, 2) |> aoc.expect(11) |> aoc.run(part2)
-  aoc.problem(aoc.Test, 2015, 3, 3) |> aoc.expect(3) |> aoc.run(part2)
-  aoc.problem(aoc.Actual, 2015, 3, 2) |> aoc.expect(2639) |> aoc.run(part2)
+  aoc.sample(2015, 3, 2, 2) |> aoc.expect(11) |> aoc.run(part2)
+  aoc.sample(2015, 3, 2, 3) |> aoc.expect(3) |> aoc.run(part2)
+  aoc.problem(2015, 3, 2) |> aoc.expect(2639) |> aoc.run(part2)
 }

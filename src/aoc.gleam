@@ -8,7 +8,7 @@ import humanise/time
 import simplifile
 
 pub type ProblemType {
-  Test
+  Sample
   Actual
 }
 
@@ -18,6 +18,7 @@ pub type Problem(a) {
     year: Int,
     day: Int,
     part: Int,
+    sample: Option(Int),
     input: String,
     expect: Option(a),
     answer: Option(a),
@@ -28,8 +29,8 @@ pub fn report(problem: Problem(a), elapsed) {
   let elapsed_as_string =
     time.humanise(time.Microseconds(int.to_float(elapsed))) |> time.to_string()
   let problem_type = case problem.problem_type {
-    Test -> "tst"
-    Actual -> "act"
+    Sample -> "samp " <> int.to_string(problem.sample |> option.unwrap(0))
+    Actual -> "actual"
   }
 
   io.print(
@@ -79,37 +80,45 @@ pub fn header(year: Int, day: Int) {
   )
 }
 
-/// Create a new problem statement.
-///
-pub fn problem(
-  problem_type: ProblemType,
-  year: Int,
-  day: Int,
-  part: Int,
-) -> Problem(a) {
-  let file_content =
-    case problem_type {
-      Test ->
-        input_test_filename(
-          int.to_string(year),
-          int.to_string(day),
-          int.to_string(part),
-        )
-      Actual -> input_filename(int.to_string(year), int.to_string(day))
-    }
-    |> simplifile.read()
-
-  let content = case file_content {
-    Ok(content) -> content
+fn read_file(filename: String) {
+  case simplifile.read(filename) {
+    Ok(content) -> content |> string.trim_end()
     Error(_) -> ""
   }
+}
+
+/// Create a new problem statement.
+///
+pub fn problem(year: Int, day: Int, part: Int) -> Problem(a) {
+  let input = read_file(input_filename(int.to_string(year), int.to_string(day)))
 
   Problem(
-    problem_type:,
+    problem_type: Actual,
     year:,
     day:,
     part:,
-    input: content |> string.trim_end(),
+    sample: None,
+    input:,
+    answer: None,
+    expect: None,
+  )
+}
+
+pub fn sample(year: Int, day: Int, part: Int, sample: Int) -> Problem(a) {
+  let input =
+    read_file(input_test_filename(
+      int.to_string(year),
+      int.to_string(day),
+      int.to_string(sample),
+    ))
+
+  Problem(
+    Sample,
+    year:,
+    day:,
+    part:,
+    sample: Some(sample),
+    input: input,
     answer: None,
     expect: None,
   )
@@ -144,7 +153,7 @@ pub fn input_filename(year: String, day: String) -> String {
 }
 
 pub fn input_test_filename(year: String, day: String, part: String) -> String {
-  input_filepath(year, day) <> "/input_test_" <> part <> ".txt"
+  input_filepath(year, day) <> "/input_sample_" <> part <> ".txt"
 }
 
 pub fn solution_filepath(year: String, day: String) -> String {

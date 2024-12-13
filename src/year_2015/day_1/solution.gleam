@@ -33,6 +33,7 @@ fn part2(problem: aoc.Problem(Int)) -> Int {
 
 pub fn main() {
   aoc.header(2015, 1)
-  aoc.problem(aoc.Actual, 2015, 1, 1) |> aoc.expect(74) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2015, 1, 2) |> aoc.expect(1795) |> aoc.run(part2)
+
+  aoc.problem(2015, 1, 1) |> aoc.expect(74) |> aoc.run(part1)
+  aoc.problem(2015, 1, 2) |> aoc.expect(1795) |> aoc.run(part2)
 }

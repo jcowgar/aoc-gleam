@@ -61,15 +61,15 @@ fn part2_using_dict(problem: Problem(Answer)) -> Answer {
 pub fn main() {
   aoc.header(2024, 1)
 
-  aoc.problem(aoc.Test, 2024, 1, 1) |> aoc.expect(11) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2024, 1, 1) |> aoc.expect(1_222_801) |> aoc.run(part1)
+  aoc.sample(2024, 1, 1, 1) |> aoc.expect(11) |> aoc.run(part1)
+  aoc.problem(2024, 1, 1) |> aoc.expect(1_222_801) |> aoc.run(part1)
 
-  aoc.problem(aoc.Test, 2024, 1, 1) |> aoc.expect(31) |> aoc.run(part2)
-  aoc.problem(aoc.Actual, 2024, 1, 2)
+  aoc.sample(2024, 1, 1, 1) |> aoc.expect(31) |> aoc.run(part2)
+  aoc.problem(2024, 1, 2)
   |> aoc.expect(22_545_250)
   |> aoc.run(part2)
 
-  aoc.problem(aoc.Actual, 2024, 1, 2)
+  aoc.problem(2024, 1, 2)
   |> aoc.expect(22_545_250)
   |> aoc.run(part2_using_dict)
 }

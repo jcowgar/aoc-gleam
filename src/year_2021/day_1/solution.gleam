@@ -36,7 +36,7 @@ fn part2(problem: aoc.Problem(Int)) -> Int {
 pub fn main() {
   io.println("")
 
-  aoc.problem(aoc.Test, 2021, 1, 1) |> aoc.expect(7) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2021, 1, 1) |> aoc.expect(1288) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2021, 1, 2) |> aoc.expect(1311) |> aoc.run(part2)
+  aoc.sample(2021, 1, 1, 1) |> aoc.expect(7) |> aoc.run(part1)
+  aoc.problem(2021, 1, 1) |> aoc.expect(1288) |> aoc.run(part1)
+  aoc.problem(2021, 1, 2) |> aoc.expect(1311) |> aoc.run(part2)
 }

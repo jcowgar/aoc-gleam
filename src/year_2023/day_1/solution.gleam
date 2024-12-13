@@ -72,19 +72,21 @@ fn part2(problem: MyProblem) {
 }
 
 pub fn main() {
-  aoc.problem(aoc.Test, 2023, 1, 1)
+  aoc.header(2023, 1)
+
+  aoc.sample(2023, 1, 1, 1)
   |> aoc.expect(142)
   |> aoc.run(part1)
 
-  aoc.problem(aoc.Actual, 2023, 1, 1)
+  aoc.problem(2023, 1, 1)
   |> aoc.expect(54_644)
   |> aoc.run(part1)
 
-  aoc.problem(aoc.Test, 2023, 1, 2)
+  aoc.sample(2023, 1, 2, 2)
   |> aoc.expect(281)
   |> aoc.run(part2)
 
-  aoc.problem(aoc.Actual, 2023, 1, 2)
+  aoc.problem(2023, 1, 2)
   |> aoc.expect(53_348)
   |> aoc.run(part2)
 }

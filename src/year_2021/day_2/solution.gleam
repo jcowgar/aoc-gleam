@@ -69,10 +69,10 @@ fn part2(problem: aoc.Problem(Int)) -> Int {
 pub fn main() {
   io.println("")
 
-  aoc.problem(aoc.Test, 2021, 2, 1) |> aoc.expect(150) |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2021, 2, 1) |> aoc.expect(1_947_824) |> aoc.run(part1)
-  aoc.problem(aoc.Test, 2021, 2, 1) |> aoc.expect(900) |> aoc.run(part2)
-  aoc.problem(aoc.Actual, 2021, 2, 2)
+  aoc.sample(2021, 2, 1, 1) |> aoc.expect(150) |> aoc.run(part1)
+  aoc.problem(2021, 2, 1) |> aoc.expect(1_947_824) |> aoc.run(part1)
+  aoc.sample(2021, 2, 1, 1) |> aoc.expect(900) |> aoc.run(part2)
+  aoc.problem(2021, 2, 2)
   |> aoc.expect(1_813_062_561)
   |> aoc.run(part2)
 }

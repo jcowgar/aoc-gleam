@@ -1,43 +1,13 @@
 import aoc.{type Problem}
 import gleam/int
-import gleam/io
 import gleam/list
-import gleam/option.{None, Some}
 import gleam/string
-
-const keypad_1 = "
-123
-456
-789"
-
-const keypad_2 = "
-  1
- 234
-56789
- ABC
-  D  "
 
 type Move {
   Up
   Down
   Left
   Right
-}
-
-fn create_keypad(pad: String) -> List(option.Option(String)) {
-  string.to_graphemes(pad)
-  |> list.map(fn(v) {
-    case v {
-      " " -> None
-      ch -> Some(ch)
-    }
-  })
-  |> list.filter(fn(v) {
-    case v {
-      Some("\n") -> False
-      _ -> True
-    }
-  })
 }
 
 fn parse_move(value: String) -> Result(List(Move), Nil) {
@@ -70,9 +40,6 @@ fn execute_moves(acc: #(Int, List(Int)), moves: List(Move)) {
 }
 
 fn part1(problem: Problem(String)) -> String {
-  create_keypad(keypad_1) |> io.debug()
-  create_keypad(keypad_2) |> io.debug()
-
   let result =
     aoc.input_line_mapper(problem, parse_move)
     |> list.fold(#(5, []), execute_moves)
@@ -89,7 +56,7 @@ fn part1(problem: Problem(String)) -> String {
 pub fn main() {
   aoc.header(2016, 2)
 
-  aoc.problem(aoc.Test, 2016, 2, 1) |> aoc.expect("1985") |> aoc.run(part1)
-  aoc.problem(aoc.Actual, 2016, 2, 1) |> aoc.expect("84452") |> aoc.run(part1)
-  // aoc.problem(aoc.Actual, 2016, 2, 2) |> aoc.expect(0) |> aoc.run(part2)
+  aoc.sample(2016, 2, 1, 1) |> aoc.expect("1985") |> aoc.run(part1)
+  aoc.problem(2016, 2, 1) |> aoc.expect("84452") |> aoc.run(part1)
+  // aoc.problem(2016, 2, 2) |> aoc.expect(0) |> aoc.run(part2)
 }
