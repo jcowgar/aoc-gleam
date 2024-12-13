@@ -4,7 +4,7 @@ import gleam/otp/task
 import gleam/set.{type Set}
 import gleam/string
 import glearray
-import year_2024/day_6/grid.{
+import support/grid.{
   type Direction, type Grid, East, Grid, North, Right, South, West,
 }
 

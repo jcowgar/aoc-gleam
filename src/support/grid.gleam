@@ -55,6 +55,38 @@ pub fn row_col_from_index(g: Grid, index: Int) -> #(Int, Int) {
   #(index / g.columns + 1, index % g.columns + 1)
 }
 
+pub fn row_col_diff(a: #(Int, Int), b: #(Int, Int)) -> #(Int, Int) {
+  #(a.0 - b.0, a.1 - b.1)
+}
+
+pub fn row_col_to_index(g: Grid, row: Int, col: Int) -> Int {
+  { row - 1 } * g.columns + col - 1
+}
+
+pub fn test_grid() {
+  let g = Grid(3, 3)
+
+  let assert #(1, 1) = row_col_from_index(g, 0)
+  let assert #(1, 2) = row_col_from_index(g, 1)
+  let assert #(1, 3) = row_col_from_index(g, 2)
+  let assert #(2, 1) = row_col_from_index(g, 3)
+  let assert #(2, 2) = row_col_from_index(g, 4)
+  let assert #(2, 3) = row_col_from_index(g, 5)
+  let assert #(3, 1) = row_col_from_index(g, 6)
+  let assert #(3, 2) = row_col_from_index(g, 7)
+  let assert #(3, 3) = row_col_from_index(g, 8)
+
+  let assert 0 = row_col_to_index(g, 1, 1)
+  let assert 1 = row_col_to_index(g, 1, 2)
+  let assert 2 = row_col_to_index(g, 1, 3)
+  let assert 3 = row_col_to_index(g, 2, 1)
+  let assert 4 = row_col_to_index(g, 2, 2)
+  let assert 5 = row_col_to_index(g, 2, 3)
+  let assert 6 = row_col_to_index(g, 3, 1)
+  let assert 7 = row_col_to_index(g, 3, 2)
+  let assert 8 = row_col_to_index(g, 3, 3)
+}
+
 pub fn move(
   grid: Grid,
   location: Int,
