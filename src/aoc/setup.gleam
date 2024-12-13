@@ -26,9 +26,10 @@ fn part1(problem: Problem(Int)) -> Int {
 pub fn main() {
 	aoc.header({{year}}, {{day}})
 
-  aoc.sample({{year}}, {{day, 1}}, 1) |> aoc.expect(0) |> aoc.run(part1)
+  aoc.sample({{year}}, {{day}}, 1, 1) |> aoc.expect(0) |> aoc.run(part1)
   // aoc.problem({{year}}, {{day}}, 1) |> aoc.expect(0) |> aoc.run(part1)
 
+  // aoc.sample({{year}}, {{day}}, 2, 1) |> aoc.expect(0) |> aoc.run(part2)
 	// aoc.problem({{year}}, {{day}}, 2) |> aoc.expect(0) |> aoc.run(part2)
 }
 "
