@@ -187,3 +187,30 @@ pub fn int(value: String) -> Int {
     _ -> panic as { "could not parse integer '" <> value <> "'" }
   }
 }
+
+/// Determine the row and column counts from a list of strings.
+/// The first string in the list is used to determine the column count
+/// and the length of the list is used to determine the row count.
+///
+/// The result is a tuple of the row and column counts, i.e.
+/// `#(row_count, column_count)`.
+///
+pub fn row_column_counts(lines: List(String)) -> #(Int, Int) {
+  let column_count = case lines |> list.first() {
+    Ok(line) -> line |> string.length()
+    Error(_) -> 0
+  }
+  let row_count = lines |> list.length()
+
+  #(row_count, column_count)
+}
+
+/// Convert a list to a list of sublists where each sublist contains
+/// the head of the input list and the remaining elements.
+///
+pub fn list_to_sublists(input_list: List(a)) -> List(List(a)) {
+  case input_list {
+    [] -> []
+    [_head, ..rest] -> [input_list, ..list_to_sublists(rest)]
+  }
+}

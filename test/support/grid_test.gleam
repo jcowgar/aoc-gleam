@@ -19,6 +19,32 @@ pub fn grid_is_valid_index_test() {
   grid.Grid(3, 3) |> grid.is_valid_index(-1) |> should.equal(False)
 }
 
+pub fn grid_is_valid_position_test() {
+  grid.Grid(3, 3)
+  |> grid.is_valid_position(Position(1, 1))
+  |> should.equal(True)
+
+  grid.Grid(3, 3)
+  |> grid.is_valid_position(Position(3, 3))
+  |> should.equal(True)
+
+  grid.Grid(3, 3)
+  |> grid.is_valid_position(Position(0, 0))
+  |> should.equal(False)
+
+  grid.Grid(3, 3)
+  |> grid.is_valid_position(Position(0, 4))
+  |> should.equal(False)
+
+  grid.Grid(3, 3)
+  |> grid.is_valid_position(Position(4, 0))
+  |> should.equal(False)
+
+  grid.Grid(3, 3)
+  |> grid.is_valid_position(Position(4, 4))
+  |> should.equal(False)
+}
+
 pub fn grid_is_same_row_test() {
   grid.Grid(3, 3) |> grid.is_same_row(0, 1) |> should.equal(True)
   grid.Grid(3, 3) |> grid.is_same_row(0, 3) |> should.equal(False)
