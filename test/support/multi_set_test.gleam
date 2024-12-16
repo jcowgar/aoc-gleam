@@ -36,3 +36,22 @@ pub fn delete_test() {
   |> multi_set.get(1)
   |> should.equal(Error(Nil))
 }
+
+pub fn pop_test() {
+  let assert Ok(#(item, ms)) =
+    multi_set.new()
+    |> multi_set.add(1, 1)
+    |> multi_set.add(1, 2)
+    |> multi_set.pop(1)
+
+  item |> should.equal(2)
+  multi_set.keys(ms) |> should.equal([1])
+
+  let assert Ok(#(item, ms)) = multi_set.pop(ms, 1)
+  item |> should.equal(1)
+
+  multi_set.keys(ms) |> should.equal([])
+
+  let assert Error(_) = multi_set.pop(ms, 1)
+  let assert Error(_) = multi_set.pop(ms, 2)
+}

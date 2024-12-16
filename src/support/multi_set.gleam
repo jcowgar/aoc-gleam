@@ -54,3 +54,15 @@ pub fn get(b: MultiSet(a, b), key: a) -> Result(List(b), Nil) {
 pub fn delete(b: MultiSet(a, b), key: a) -> MultiSet(a, b) {
   dict.delete(b, key)
 }
+
+pub fn pop(b: MultiSet(a, b), key: a) -> Result(#(b, MultiSet(a, b)), Nil) {
+  case dict.get(b, key) {
+    Ok([value, ..values]) ->
+      case values {
+        [] -> Ok(#(value, dict.delete(b, key)))
+        _ -> Ok(#(value, dict.upsert(b, key, fn(_) { values })))
+      }
+    Ok([]) -> Error(Nil)
+    Error(_) -> Error(Nil)
+  }
+}
