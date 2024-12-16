@@ -82,17 +82,23 @@ fn part1(problem: Problem(Int)) -> Int {
   |> int.sum()
 }
 
-// fn part2(problem: Problem(Int)) -> Int {
-//   let input = aoc.input_line_mapper(problem, int.parse)
-//
-//   -1
-// }
+fn part2(problem: Problem(Int)) -> Int {
+  let island = parse_data(problem.input)
+
+  island.trailheads
+  |> list.map(fn(trailhead) {
+    #(trailhead, find_path([], [trailhead], trailhead, island))
+  })
+  |> list.map(fn(scoring) { list.length(scoring.1) })
+  |> int.sum()
+}
 
 pub fn main() {
   aoc.header(2024, 10)
 
   aoc.sample(2024, 10, 1, 1) |> aoc.expect(36) |> aoc.run(part1)
   aoc.problem(2024, 10, 1) |> aoc.expect(552) |> aoc.run(part1)
-  // aoc.sample(2024, 10, 2, 1) |> aoc.expect(0) |> aoc.run(part2)
-  // aoc.problem(2024, 10, 2) |> aoc.expect(0) |> aoc.run(part2)
+
+  aoc.sample(2024, 10, 2, 1) |> aoc.expect(81) |> aoc.run(part2)
+  aoc.problem(2024, 10, 2) |> aoc.expect(1225) |> aoc.run(part2)
 }
