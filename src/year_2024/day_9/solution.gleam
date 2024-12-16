@@ -3,7 +3,6 @@ import atomic_array as aa
 import gleam/bool
 import gleam/int
 import gleam/list.{Continue, Stop}
-import gleam/result
 
 type Disk {
   Disk(
