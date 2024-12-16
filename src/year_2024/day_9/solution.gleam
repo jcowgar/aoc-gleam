@@ -91,7 +91,7 @@ fn part1(problem: Problem(Int)) -> Int {
   let #(_, _, compacted) =
     disk.blocks
     |> list.fold_until(#(disk.block_count, disk, []), fn(acc, block) {
-      use <- bool.guard(acc.0 == 0, Stop(#(acc.0, acc.1, acc.2)))
+      use <- bool.guard(acc.0 == 0, Stop(acc))
 
       case block {
         -1 -> {
