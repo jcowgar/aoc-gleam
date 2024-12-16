@@ -153,13 +153,16 @@ fn find_space(
             _ -> acc.1
           }
 
-          let chunk =
+          let is_large_enough =
             list.range(index, index + needed - 1)
-            |> list.fold([], fn(acc, i) {
-              [aa.get(blocks, i) |> result.unwrap(0), ..acc]
+            |> list.all(fn(index) {
+              case aa.get(blocks, index) {
+                Ok(-1) -> True
+                _ -> False
+              }
             })
 
-          case chunk == list.repeat(-1, times: needed) {
+          case is_large_enough {
             True -> Stop(#(index, first_space))
             False -> Continue(#(-1, first_space))
           }
