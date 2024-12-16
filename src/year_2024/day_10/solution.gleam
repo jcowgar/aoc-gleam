@@ -1,8 +1,6 @@
 import aoc.{type Problem}
 import atomic_array as aa
-import gleam/bool
 import gleam/int
-import gleam/io
 import gleam/list
 import gleam/result
 import gleam/string
@@ -56,15 +54,6 @@ fn find_path(acc, path: List(Int), this_index: Int, island: Island) {
     }
   })
 }
-
-//  0 - 89010123
-//  8 - 78121874
-// 16 - 87430965
-// 24 - 96549874
-// 32 - 45678903
-// 40 - 32019012
-// 48 - 01329801
-// 56 - 10456732
 
 fn part1(problem: Problem(Int)) -> Int {
   let island = parse_data(problem.input)
