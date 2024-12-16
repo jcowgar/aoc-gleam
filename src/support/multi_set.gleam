@@ -55,6 +55,11 @@ pub fn delete(b: MultiSet(a, b), key: a) -> MultiSet(a, b) {
   dict.delete(b, key)
 }
 
+/// Pop a value from the head of the multi set with `key`.
+/// If the key does not exist, an `Error` is returned.
+/// If the key exists and has no values, an `Error` is returned.
+/// If the key exists, the head value is returned wrapped in an `Ok` along with the updated multiset.
+///
 pub fn pop(b: MultiSet(a, b), key: a) -> Result(#(b, MultiSet(a, b)), Nil) {
   case dict.get(b, key) {
     Ok([value, ..values]) ->
@@ -65,4 +70,14 @@ pub fn pop(b: MultiSet(a, b), key: a) -> Result(#(b, MultiSet(a, b)), Nil) {
     Ok([]) -> Error(Nil)
     Error(_) -> Error(Nil)
   }
+}
+
+pub fn reverse(b: MultiSet(a, b)) -> MultiSet(a, b) {
+  dict.keys(b)
+  |> list.fold(new(), fn(acc, key) {
+    case dict.get(b, key) {
+      Ok(values) -> dict.insert(acc, key, values |> list.reverse())
+      Error(_) -> panic as "key not found"
+    }
+  })
 }
