@@ -142,12 +142,17 @@ fn find_space(
   in blocks: aa.AtomicArray,
   start start_scan_index: Int,
   size_needed needed: Int,
-) -> Result(Int, Nil) {
-  let found_index =
+) -> Result(#(Int, Int), Nil) {
+  let found =
     list.range(start_scan_index, aa.size(blocks) - 1)
-    |> list.fold_until(-1, fn(_acc, index) {
+    |> list.fold_until(#(-1, -1), fn(acc, index) {
       case aa.get(blocks, index) {
         Ok(-1) -> {
+          let first_space = case acc.1 {
+            -1 -> index
+            _ -> acc.1
+          }
+
           let chunk =
             list.range(index, index + needed - 1)
             |> list.fold([], fn(acc, i) {
@@ -155,18 +160,18 @@ fn find_space(
             })
 
           case chunk == list.repeat(-1, times: needed) {
-            True -> Stop(index)
-            False -> Continue(-1)
+            True -> Stop(#(index, first_space))
+            False -> Continue(#(-1, first_space))
           }
         }
-        Ok(_) -> Continue(-1)
+        Ok(_) -> Continue(acc)
         Error(_) -> panic as "invalid block index"
       }
     })
 
-  case found_index {
-    -1 -> Error(Nil)
-    index -> Ok(index)
+  case found.0, found.1 {
+    -1, _ -> Error(Nil)
+    index, first_space -> Ok(#(index, first_space))
   }
 }
 
@@ -183,19 +188,19 @@ fn part2(problem: Problem(Int)) -> Int {
   })
 
   disk.blocks
-  |> list.fold_until(block_count - 1, fn(acc, _block) {
-    use <- bool.guard(acc <= 0, Stop(acc))
+  |> list.fold_until(#(block_count - 1, 0), fn(acc, _block) {
+    use <- bool.guard(acc.0 <= 0, Stop(acc))
 
-    let assert Ok(block) = aa.get(blocks, acc)
+    let assert Ok(block) = aa.get(blocks, acc.0)
 
     case block {
-      -1 -> Continue(acc - 1)
+      -1 -> Continue(#(acc.0 - 1, acc.1))
       _ -> {
-        let #(start_index, size) = find_last_file(in: blocks, start_at: acc)
+        let #(start_index, size) = find_last_file(in: blocks, start_at: acc.0)
 
-        case find_space(in: blocks, start: 0, size_needed: size) {
-          Error(_) -> Continue(start_index - 1)
-          Ok(space_index) if space_index < start_index -> {
+        case find_space(in: blocks, start: acc.1, size_needed: size) {
+          Error(_) -> Continue(#(start_index - 1, acc.1))
+          Ok(#(space_index, first_space)) if space_index < start_index -> {
             move_block(
               in: blocks,
               to: space_index,
@@ -203,9 +208,9 @@ fn part2(problem: Problem(Int)) -> Int {
               count: size,
             )
 
-            Continue(start_index - 1)
+            Continue(#(start_index - 1, first_space))
           }
-          Ok(_) -> Continue(start_index - 1)
+          Ok(_) -> Continue(#(start_index - 1, acc.1))
         }
       }
     }
