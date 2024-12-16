@@ -1,4 +1,5 @@
 import gleam/dict.{type Dict}
+import gleam/list
 import gleam/option.{None, Some}
 
 pub type MultiSet(a, b) =
