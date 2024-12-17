@@ -1,3 +1,4 @@
+import gleam/list
 import support/grid/direction.{type Direction, East, North, South, West}
 import support/grid/position.{type Position, Position}
 
@@ -79,4 +80,21 @@ pub fn move(
     True -> Ok(new_location)
     False -> Error(Nil)
   }
+}
+
+/// Compute the indexes that are touching the given `index` in the given `directions`.
+///
+pub fn touching_indexes(
+  g: Grid,
+  from index: Int,
+  in_directions directions: List(Direction),
+) -> List(Int) {
+  directions
+  |> list.map(fn(direction) { move(g, index, direction, 1) })
+  |> list.map(fn(result) {
+    case result {
+      Ok(index) -> index
+      Error(_) -> -1
+    }
+  })
 }
