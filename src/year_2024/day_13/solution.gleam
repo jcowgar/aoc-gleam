@@ -36,17 +36,23 @@ fn parse_data(input: String) -> List(Machine) {
 }
 
 pub fn find_multiplier_pairs(
-  num1: Int,
-  num2: Int,
-  target: Int,
+  num1_1: Int,
+  num2_1: Int,
+  target_1: Int,
+  num1_2: Int,
+  num2_2: Int,
+  target_2: Int,
 ) -> List(#(Int, Int)) {
-  let max_iterations = target / int.min(num1, num2)
+  let range = list.range(1, target_1 / int.min(num1_1, num2_1))
 
-  list.range(1, max_iterations)
+  range
   |> list.fold([], fn(acc, x) {
-    list.range(1, max_iterations)
+    range
     |> list.fold(acc, fn(acc, y) {
-      case num1 * x + num2 * y == target {
+      case
+        num1_1 * x + num2_1 * y == target_1
+        && num1_2 * x + num2_2 * y == target_2
+      {
         True -> [#(x, y), ..acc]
         False -> acc
       }
@@ -57,26 +63,15 @@ pub fn find_multiplier_pairs(
 fn part1(problem: Problem(Int)) -> Int {
   parse_data(problem.input)
   |> list.map(fn(machine) {
-    let x =
-      find_multiplier_pairs(
-        machine.button_a_move.x,
-        machine.button_b_move.x,
-        machine.prize.x,
-      )
-    let y =
-      find_multiplier_pairs(
-        machine.button_a_move.y,
-        machine.button_b_move.y,
-        machine.prize.y,
-      )
-
-    x
-    |> list.fold([], fn(acc, x) {
-      case list.contains(y, x) {
-        True -> [x.0 * button_a_cost + x.1 * button_b_cost, ..acc]
-        False -> acc
-      }
-    })
+    find_multiplier_pairs(
+      machine.button_a_move.x,
+      machine.button_b_move.x,
+      machine.prize.x,
+      machine.button_a_move.y,
+      machine.button_b_move.y,
+      machine.prize.y,
+    )
+    |> list.map(fn(x) { x.0 * button_a_cost + x.1 * button_b_cost })
     |> list.sort(int.compare)
     |> list.first()
     |> result.unwrap(0)
