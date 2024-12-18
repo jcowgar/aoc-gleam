@@ -1,3 +1,4 @@
+import gleam/list
 import support/grid/direction.{type Direction, East, North, South, West}
 import support/grid/position.{type Position, Position}
 
@@ -39,10 +40,18 @@ pub fn is_same_row(g: Grid, index1: Int, index2: Int) -> Bool {
   index1 / g.columns == index2 / g.columns
 }
 
+fn row(g: Grid, index: Int) -> Int {
+  index % g.columns + 1
+}
+
+fn column(g: Grid, index: Int) -> Int {
+  index / g.columns + 1
+}
+
 /// Compute the position from the given `index`.
 ///
 pub fn position_from_index(g: Grid, index: Int) -> Position {
-  Position(index % g.columns + 1, index / g.columns + 1)
+  Position(row(g, index), column(g, index))
 }
 
 /// Compute the index from the given `position`.
@@ -79,4 +88,70 @@ pub fn move(
     True -> Ok(new_location)
     False -> Error(Nil)
   }
+}
+
+/// Move from the given `location` in the given `direction` by the given `count`.
+/// The result is the new location `index` after moving.
+///
+/// Wrapping will occur on all four sides of the grid. For example, if the
+/// current location is at the top of the grid and you move North one space, the
+/// new location will be on the bottom of the grid.
+///
+pub fn wrap_move(
+  grid: Grid,
+  location: Int,
+  direction: Direction,
+  count: Int,
+) -> Index {
+  case direction {
+    North -> {
+      let new_location = location - { count * grid.columns }
+
+      case new_location < 0 {
+        True -> new_location + grid.rows * grid.columns
+        False -> new_location
+      }
+    }
+    East -> {
+      let new_location = location + count
+
+      case is_same_row(grid, location, new_location) {
+        True -> new_location
+        False -> new_location - grid.columns
+      }
+    }
+    South -> {
+      let new_location = location + { count * grid.columns }
+
+      case new_location >= size(grid) {
+        True -> new_location - { grid.columns * grid.rows }
+        False -> new_location
+      }
+    }
+    West -> {
+      let new_location = location - count
+
+      case is_same_row(grid, location, new_location), new_location < 0 {
+        True, False -> new_location
+        _, _ -> new_location + grid.columns
+      }
+    }
+  }
+}
+
+/// Compute the indexes that are touching the given `index` in the given `directions`.
+///
+pub fn touching_indexes(
+  g: Grid,
+  from index: Int,
+  in_directions directions: List(Direction),
+) -> List(Int) {
+  directions
+  |> list.map(fn(direction) { move(g, index, direction, 1) })
+  |> list.map(fn(result) {
+    case result {
+      Ok(index) -> index
+      Error(_) -> -1
+    }
+  })
 }
