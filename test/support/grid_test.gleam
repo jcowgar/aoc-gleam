@@ -1,3 +1,5 @@
+import gleam/int
+import gleam/list
 import gleeunit
 import gleeunit/should
 import support/grid
@@ -93,4 +95,68 @@ pub fn move_test() {
   grid.move(g, 0, West, 3) |> should.equal(Error(Nil))
   grid.move(g, 8, West, 3) |> should.equal(Error(Nil))
   grid.move(g, 8, North, 3) |> should.equal(Error(Nil))
+}
+
+pub fn touching_indexes_test() {
+  let g = grid.Grid(3, 3)
+
+  grid.touching_indexes(g, 0, [North, East, South, West])
+  |> list.sort(int.compare)
+  |> should.equal([-1, -1, 1, 3])
+
+  grid.touching_indexes(g, 1, [North, East, South, West])
+  |> list.sort(int.compare)
+  |> should.equal([-1, 0, 2, 4])
+
+  grid.touching_indexes(g, 2, [North, East, South, West])
+  |> list.sort(int.compare)
+  |> should.equal([-1, -1, 1, 5])
+
+  grid.touching_indexes(g, 3, [North, East, South, West])
+  |> list.sort(int.compare)
+  |> should.equal([-1, 0, 4, 6])
+
+  grid.touching_indexes(g, 4, [North, East, South, West])
+  |> list.sort(int.compare)
+  |> should.equal([1, 3, 5, 7])
+
+  grid.touching_indexes(g, 5, [North, East, South, West])
+  |> list.sort(int.compare)
+  |> should.equal([-1, 2, 4, 8])
+
+  grid.touching_indexes(g, 6, [North, East, South, West])
+  |> list.sort(int.compare)
+  |> should.equal([-1, -1, 3, 7])
+
+  grid.touching_indexes(g, 7, [North, East, South, West])
+  |> list.sort(int.compare)
+  |> should.equal([-1, 4, 6, 8])
+
+  grid.touching_indexes(g, 8, [North, East, South, West])
+  |> list.sort(int.compare)
+  |> should.equal([-1, -1, 5, 7])
+
+  grid.touching_indexes(g, 4, [North, South])
+  |> list.sort(int.compare)
+  |> should.equal([1, 7])
+
+  grid.touching_indexes(g, 4, [East, West])
+  |> list.sort(int.compare)
+  |> should.equal([3, 5])
+}
+
+pub fn wrap_move_test() {
+  let g = grid.Grid(3, 3)
+
+  grid.wrap_move(g, 2, East, 1)
+  |> should.equal(0)
+
+  grid.wrap_move(g, 0, West, 1)
+  |> should.equal(2)
+
+  grid.wrap_move(g, 0, North, 1)
+  |> should.equal(6)
+
+  grid.wrap_move(g, 6, South, 1)
+  |> should.equal(0)
 }
